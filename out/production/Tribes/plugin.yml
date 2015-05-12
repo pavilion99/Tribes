@@ -1,0 +1,15 @@
+name: Tribes
+version: 1.0.0
+description: Tribes is a plugin used to bring people together to fight for their community.
+author: pavilion99
+main: co.valdeon.Tribes.Tribes
+database: false
+commands:
+  tribes:
+    description: Main command for Tribes.
+    aliases: [t]
+    permission: ScortexMC.tribes.tribes
+permissions:
+  ScortexMC.tribes.tribes:
+    description: Gives permission to use the main command for Tribes.
+    default: true
