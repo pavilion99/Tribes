@@ -1,6 +1,7 @@
 package co.valdeon.Tribes.util;
 
 import co.valdeon.Tribes.commands.TribesCmd;
+import co.valdeon.Tribes.util.command.CommandLoader;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 

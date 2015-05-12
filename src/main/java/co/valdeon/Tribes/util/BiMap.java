@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class BiMap<K, V> {
 
-    private HashMap<K, V> forward = new HashMap<>();
-    private HashMap<V, K> reverse = new HashMap<>();
+    private final HashMap<K, V> forward = new HashMap<>();
+    private final HashMap<V, K> reverse = new HashMap<>();
 
     public void put(K a, V b) {
         forward.put(a, b);

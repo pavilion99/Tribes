@@ -1,4 +1,4 @@
-package co.valdeon.Tribes.util;
+package co.valdeon.Tribes.util.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

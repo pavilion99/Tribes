@@ -1,7 +1,8 @@
-package co.valdeon.Tribes.util;
+package co.valdeon.Tribes.util.command;
 
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.commands.TribesCmd;
+import co.valdeon.Tribes.util.BiMap;
 import org.bukkit.command.PluginCommand;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class CommandLoader {
 
     public static BiMap<Class, String> executors;
 
-    public static List<PluginCommand> cmds = new ArrayList<>();
+    public static final List<PluginCommand> cmds = new ArrayList<>();
 
     public static void init(Tribes tribes) {
         String[] listCmds = {"tribes"};

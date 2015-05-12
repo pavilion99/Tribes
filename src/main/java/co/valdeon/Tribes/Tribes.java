@@ -1,13 +1,17 @@
 package co.valdeon.Tribes;
 
 import co.valdeon.Tribes.commands.TribesCmd;
-import co.valdeon.Tribes.util.CommandLoader;
+import co.valdeon.Tribes.storage.Database;
+import co.valdeon.Tribes.util.command.CommandLoader;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Level;
 
 public class Tribes extends JavaPlugin {
 
@@ -19,6 +23,8 @@ public class Tribes extends JavaPlugin {
 
         registerCommands();
         registerListeners();
+
+        Database.verifyDBConnection();
     }
 
     @Override
@@ -53,6 +59,10 @@ public class Tribes extends JavaPlugin {
 
     public FileConfiguration getBukkitCfg() {
         return getConfig();
+    }
+
+    public static void log(Level l, String s) {
+        Bukkit.getLogger().log(l, s);
     }
 
 }
