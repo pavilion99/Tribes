@@ -23,7 +23,7 @@ public class TribesCmd extends TribeCommand {
 
         for(String l : acceptableFirstArgs) {
             if(l.equals(args[1])) {
-                run(s, args[1], args);
+                return run(s, args[1], args);
             }
         }
 
@@ -41,11 +41,23 @@ public class TribesCmd extends TribeCommand {
         Message.message(s, "#----------------------------------------#");
     }
 
-    private void run(CommandSender sender, String s, String[] args) {
+    private boolean run(CommandSender sender, String s, String[] args) {
         switch(s) {
+            case "create":
+                break;
+            case "invite":
+                break;
+            case "kick":
+                break;
+            case "destroy":
+                break;
+            case "coins":
+                break;
             default:
                 Message.messageInvalidArgs(sender, this.getClass());
+                return false;
         }
+        return true;
     }
 
 }
