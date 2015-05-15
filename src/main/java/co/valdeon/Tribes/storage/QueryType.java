@@ -1,6 +1,7 @@
 package co.valdeon.Tribes.storage;
 
 public enum QueryType {
+
     SELECT("SELECT"),
     UPDATE("UPDATE"),
     DELETE("DELETE"),
@@ -13,4 +14,5 @@ public enum QueryType {
     QueryType(String s) {
         this.val = s;
     }
+
 }

@@ -1,8 +1,12 @@
 package co.valdeon.Tribes.storage;
 
+import co.valdeon.Tribes.Tribes;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
 
 public class Query {
 
@@ -11,13 +15,12 @@ public class Query {
     private QueryType q;
     private Connection con;
     private ResultSet result;
+    private Statement s;
 
-    public Query() { }
-
-    public Query (QueryType q, Database d, String... s) {
+    public Query (QueryType q, String... s) {
         this.q = q;
-        this.db = d;
-        this.con = d.getConnection();
+        this.db = Tribes.getDB();
+        this.con = this.db.getConnection();
         switch(q) {
             case SELECT:
                 this.query = q.val;
@@ -35,6 +38,8 @@ public class Query {
                 break;
             case DELETE:
                 this.query = q.val;
+                this.query += " FROM ";
+                this.query += s[0];
                 break;
             default:
                 this.query = null;
@@ -53,13 +58,16 @@ public class Query {
     }
 
     public ResultSet query() {
+        Tribes.log(Level.INFO, this.query);
+
         if(this.query == null)
             return null;
 
         if (this.q == QueryType.UPDATE) {
             try {
-                this.con.createStatement().executeQuery(this.query);
+                this.con.createStatement().executeUpdate(this.query);
             }catch(SQLException e) {
+                e.printStackTrace();
                 return null;
             }
             return null;
@@ -67,15 +75,40 @@ public class Query {
 
         try {
             this.result = this.con.createStatement().executeQuery(this.query);
+            return this.result;
         }catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ResultSet query(boolean returnKeys) {
+        Tribes.log(Level.INFO, this.query);
+        if(!(this.q == QueryType.UPDATE || this.q == QueryType.INSERT || this.q == QueryType.INSERTINTO))
+            return null;
+
+        if(this.query == null)
+            return null;
+
+        try {
+            s = this.con.createStatement();
+            s.executeUpdate(this.query);
+        }catch(SQLException e) {
+            e.printStackTrace();
             return null;
         }
 
-        return this.result;
+        try {
+            ResultSet h = s.executeQuery("SELECT last_insert_rowid()");
+            return returnKeys ? h : this.result;
+        }catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Query where(String col, WhereType w, String val) {
-        this.query += " " + col + w.val + val;
+        this.query += " WHERE " + col + w.val + val;
         return this;
     }
 
@@ -105,11 +138,11 @@ public class Query {
     public Query columns(String... s) {
         this.query += " (";
         for(int i = 0; i < s.length; i++) {
-            this.query += s;
+            this.query += s[i];
             if(!((i + 1) >= s.length))
                 this.query += ", ";
             else
-                this.query += ") ";
+                this.query += ")";
         }
         return this;
     }
@@ -117,13 +150,24 @@ public class Query {
     public Query values(String... s) {
         this.query += " VALUES (";
         for(int i = 0; i < s.length; i++) {
-            this.query += s;
+            this.query += s[i];
             if(!((i + 1) >= s.length))
                 this.query += ", ";
             else
-                this.query += ") ";
+                this.query += ")";
         }
         return this;
+    }
+
+    public void close() {
+        try {
+            if(this.con != null)
+                this.con.close();
+            if(this.result != null)
+                this.result.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

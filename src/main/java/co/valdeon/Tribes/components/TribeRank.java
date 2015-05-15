@@ -12,4 +12,17 @@ public enum TribeRank {
         this.power = power;
     }
 
+    public static TribeRank getRank(String s) {
+        switch(s) {
+            case "MEMBER":
+                return MEMBER;
+            case "OFFICER":
+                return OFFICER;
+            case "CHIEF":
+                return CHIEF;
+            default:
+                return null;
+        }
+    }
+
 }

@@ -1,2 +1,9 @@
 consoleExecutionFailure: '&cThis command cannot be run from the console.'
 invalidArgs: '&cInvalid arguments!'
+worldName: 'world'
+tierOneChunks: 25
+tierTwoChunks: 50
+tierThreeChunks: 75
+tierFourChunks: 100
+tierFiveChunks: 125
+db: 'Tribes'

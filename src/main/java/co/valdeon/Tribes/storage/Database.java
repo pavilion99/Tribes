@@ -10,15 +10,9 @@ import java.util.logging.Level;
 
 public class Database {
 
-    private Connection con;
-
-    public Database() {
-        this.con = getConnection();
-    }
-
     public Connection getConnection() {
         try {
-            return DriverManager.getConnection("jdbc:sqlite:" + Config.dbName + ".db");
+            return DriverManager.getConnection("jdbc:sqlite:" + Tribes.getDataDir().toString() + "\\" +Config.dbName + ".db");
         }catch(SQLException e) {
             return null;
         }
@@ -26,7 +20,8 @@ public class Database {
 
     public static boolean verifyDBConnection() {
         try {
-            DriverManager.getConnection("jdbc:sqlite:" + Config.dbName + ".db");
+            DriverManager.getConnection("jdbc:sqlite:" + Tribes.getDataDir().toString() + "\\" + Config.dbName + ".db");
+            Tribes.log(Level.INFO, "Connected to database at jdbc:sqlite:" + Tribes.getDataDir().toString() + "\\" + Config.dbName + ".db");
         }catch(SQLException e) {
             Tribes.log(Level.SEVERE, "Failed to connect to database!");
             return false;

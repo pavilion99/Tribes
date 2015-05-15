@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class Message {
 
-    public static HashMap<Class, String> invalidArgsMappings;
+    public static HashMap<Class, String> invalidArgsMappings = new HashMap<>();
 
     public static void message(CommandSender s, String... params) {
         String message = "";
