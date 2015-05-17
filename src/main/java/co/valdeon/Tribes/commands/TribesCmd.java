@@ -80,6 +80,8 @@ public class TribesCmd extends TribeCommand {
                 Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId()))).where("id", WhereType.EQUALS, Integer.toString((int)Tribes.Players.get(Bukkit.getPlayer(sender.getName()), "id")));
                 q.close();
 
+                Message.message(sender, "&9You have successfully created the tribe &e" + g.getName() + "&9.");
+
                 break;
             case "invite":
                 if(args.length != 2) {
