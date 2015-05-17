@@ -45,7 +45,14 @@ public abstract class TribeLoader {
                     chunks.add(Bukkit.getWorld(Config.world).getChunkAt(Integer.parseInt(chonks[0]), Integer.parseInt(chonks[1])));
                 }
 
-                Tribe t = new Tribe(r.getString("name"), r.getInt("id"), TribeTier.getTier(r.getString("tier")), members, chunks);
+                List<OfflinePlayer> invitees = new ArrayList<>();
+                String invitiis = r.getString("invitees");
+                String[] initaas = invitiis.split(";");
+                for(String s : initaas) {
+                    invitees.add(Bukkit.getOfflinePlayer(UUID.fromString(s)));
+                }
+
+                Tribe t = new Tribe(r.getString("name"), r.getInt("id"), TribeTier.getTier(r.getString("tier")), members, chunks, r.getInt("coins"), invitees);
 
                 tribesList.add(t);
 
@@ -75,6 +82,15 @@ public abstract class TribeLoader {
         for(Tribe t : tribesList) {
             if(t.getMembers().containsKey(p))
                 return t;
+        }
+        return null;
+    }
+
+    public static Tribe getTribeFromString(String s) {
+        for(Tribe x : tribesList) {
+            if(x.getName().equals(s)) {
+                return x;
+            }
         }
         return null;
     }

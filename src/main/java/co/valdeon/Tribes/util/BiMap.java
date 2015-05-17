@@ -55,4 +55,8 @@ public class BiMap<K, V> {
         return getForward(a);
     }
 
+    public boolean containsKey(K a) {
+        return forward.containsKey(a);
+    }
+
 }

@@ -10,6 +10,7 @@ public class Config {
     public static String invalidArgs;
     public static String dbName;
     public static String world;
+    public static String earnCoinsMessage;
 
     public static int tierOneChunks;
     public static int tierTwoChunks;
@@ -29,7 +30,7 @@ public class Config {
         tierThreeChunks = (int)get(int.class, "tierThreeChunks");
         tierFourChunks = (int)get(int.class, "tierFourChunks");
         tierFiveChunks = (int)get(int.class, "tierFiveChunks");
-
+        earnCoinsMessage = (String)get(String.class, "earnCoinsMessage");
     }
 
     public Object get(Class c, String path) {

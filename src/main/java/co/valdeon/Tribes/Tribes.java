@@ -2,7 +2,10 @@ package co.valdeon.Tribes;
 
 import co.valdeon.Tribes.commands.TribesCmd;
 import co.valdeon.Tribes.components.Tribe;
+import co.valdeon.Tribes.events.TribeEarnCoinsEvent;
 import co.valdeon.Tribes.listeners.PlayerJoinListener;
+import co.valdeon.Tribes.listeners.PlayerQuitListener;
+import co.valdeon.Tribes.listeners.TribeEarnCoinsListener;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.CommandLoader;
@@ -52,6 +55,8 @@ public class Tribes extends JavaPlugin {
 
     public void registerListeners() {
         getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        getPluginManager().registerEvents(new TribeEarnCoinsListener(), this);
     }
 
     public void registerCommands() {
