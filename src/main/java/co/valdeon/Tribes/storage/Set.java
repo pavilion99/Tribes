@@ -11,7 +11,7 @@ public class Set {
     }
 
     public String getString() {
-        return this.column + "=" + this.value;
+        return "`" + this.column + "`" + "=" + this.value;
     }
 
 }

@@ -63,4 +63,19 @@ public enum TribeTier {
         }
     }
 
+    public static TribeTier getTierFromCoins(int coins) {
+        if(coins >= 0 && coins <= 2)
+            return TIER_ONE;
+        else if (coins > 2 && coins <= 4)
+            return TIER_TWO;
+        else if(coins > 4 && coins <= 6)
+            return TIER_THREE;
+        else if(coins > 6 && coins <= 8)
+            return TIER_FOUR;
+        else if(coins > 8)
+            return TIER_FIVE;
+        else
+            return TIER_ONE;
+    }
+
 }

@@ -2,14 +2,16 @@ package co.valdeon.Tribes.components;
 
 public enum TribeRank {
 
-    MEMBER(1),
-    OFFICER(2),
-    CHIEF(3);
+    MEMBER(1, "MEMBER"),
+    OFFICER(2, "OFFICER"),
+    CHIEF(3, "CHIEF");
 
     int power;
+    String name;
 
-    TribeRank(int power) {
+    TribeRank(int power, String name) {
         this.power = power;
+        this.name = name;
     }
 
     public static TribeRank getRank(String s) {
@@ -23,6 +25,10 @@ public enum TribeRank {
             default:
                 return null;
         }
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 }

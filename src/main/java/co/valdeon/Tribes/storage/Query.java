@@ -2,13 +2,14 @@ package co.valdeon.Tribes.storage;
 
 import co.valdeon.Tribes.Tribes;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
-public class Query {
+public class Query implements Closeable {
 
     private String query;
     private Database db;
@@ -58,15 +59,14 @@ public class Query {
     }
 
     public ResultSet query() {
-        Tribes.log(Level.INFO, this.query);
-
         if(this.query == null)
             return null;
 
-        if (this.q == QueryType.UPDATE) {
+        if (this.q == QueryType.UPDATE || this.q == QueryType.INSERT || this.q == QueryType.INSERTINTO || this.q == QueryType.DELETE) {
             try {
                 this.con.createStatement().executeUpdate(this.query);
             }catch(SQLException e) {
+                Tribes.log(Level.INFO, this.query);
                 e.printStackTrace();
                 return null;
             }
@@ -77,6 +77,7 @@ public class Query {
             this.result = this.con.createStatement().executeQuery(this.query);
             return this.result;
         }catch(SQLException e) {
+            Tribes.log(Level.INFO, this.query);
             e.printStackTrace();
             return null;
         }
@@ -84,7 +85,8 @@ public class Query {
 
     public ResultSet query(boolean returnKeys) {
         Tribes.log(Level.INFO, this.query);
-        if(!(this.q == QueryType.UPDATE || this.q == QueryType.INSERT || this.q == QueryType.INSERTINTO))
+
+        if(!(this.q == QueryType.UPDATE || this.q == QueryType.INSERT || this.q == QueryType.INSERTINTO || this.q == QueryType.DELETE))
             return null;
 
         if(this.query == null)
@@ -94,6 +96,7 @@ public class Query {
             s = this.con.createStatement();
             s.executeUpdate(this.query);
         }catch(SQLException e) {
+            Tribes.log(Level.INFO, this.query);
             e.printStackTrace();
             return null;
         }
@@ -102,6 +105,7 @@ public class Query {
             ResultSet h = s.executeQuery("SELECT last_insert_rowid()");
             return returnKeys ? h : this.result;
         }catch (SQLException e) {
+            Tribes.log(Level.INFO, this.query);
             e.printStackTrace();
             return null;
         }
@@ -128,7 +132,7 @@ public class Query {
     public Query set(Set... s) {
         this.query += " SET ";
         for(int i = 0; i < s.length; i++) {
-            this.query += s[i].getString() + " ";
+            this.query += s[i].getString();
             if(!((i + 1) >= s.length))
                 this.query += ", ";
         }
@@ -138,7 +142,7 @@ public class Query {
     public Query columns(String... s) {
         this.query += " (";
         for(int i = 0; i < s.length; i++) {
-            this.query += s[i];
+            this.query += "`" + s[i] + "`";
             if(!((i + 1) >= s.length))
                 this.query += ", ";
             else

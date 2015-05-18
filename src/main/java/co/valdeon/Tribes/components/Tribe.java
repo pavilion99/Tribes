@@ -1,9 +1,6 @@
 package co.valdeon.Tribes.components;
 
-import co.valdeon.Tribes.storage.Query;
-import co.valdeon.Tribes.storage.QueryType;
-import co.valdeon.Tribes.storage.Set;
-import co.valdeon.Tribes.storage.WhereType;
+import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.BiMap;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
@@ -36,9 +33,9 @@ public class Tribe {
         this.ownedChunks.add(creator.getPlayer().getLocation().getChunk());
     }
 
-    public Tribe(String name, int id, TribeTier tier, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees) {
+    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees) {
         this.name = name;
-        this.tier = tier;
+        this.tier = TribeTier.getTierFromCoins(coins);
         this.members = members;
         this.ownedChunks = ownedChunks;
         this.id = id;
@@ -91,25 +88,7 @@ public class Tribe {
     }
 
     public Tribe push() {
-        if(getId() != 0) {
-            new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + getChunkString() + "'"), new Set("tier", "'" + getTier().tierString + "'")).where("id", WhereType.EQUALS, Integer.toString(getId())).limit(1).query();
-            return this;
-        }else {
-
-            ResultSet z = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "chunks", "tier", "invitees").values("'" + this.name + "'", "'" + this.getChunkString() + "'", "'" + this.getTier().tierString + "'", "'" + this.getInviteeString() + "'").query(true);
-
-            try {
-                if (z.next()) {
-                    this.id = z.getInt(1);
-                    z.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return this;
-            }
-
-        }
-
+        this.id = Database.pushTribe(this);
         return this;
     }
 
@@ -160,9 +139,12 @@ public class Tribe {
         OfflinePlayer[] x = invitees.toArray(new OfflinePlayer[1]);
         String fin = "";
         for(int i = 0; i < x.length; i++) {
-            fin += x[i].getUniqueId().toString();
-            if(!((i + 1) >= x.length))
-                fin += ";";
+            if(x[i] != null) {
+                fin += x[i].getUniqueId().toString();
+                if (!((i + 1) >= x.length))
+                    fin += ";";
+
+            }
         }
         return fin;
     }

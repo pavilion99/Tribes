@@ -7,3 +7,5 @@ tierThreeChunks: 75
 tierFourChunks: 100
 tierFiveChunks: 125
 db: 'Tribes'
+
+earnCoinsMessage: '&e{0}&8 has earned &e{1}&8 coins for &e{2}&8.'

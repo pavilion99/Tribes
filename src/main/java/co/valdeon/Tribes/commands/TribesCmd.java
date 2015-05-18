@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
@@ -59,6 +60,7 @@ public class TribesCmd extends TribeCommand {
         switch(s) {
             case "create":
                 if(args.length != 2) {
+                    Message.message(sender, "&cProper usage:");
                     Message.message(sender, "&c/t create <name>");
                     return true;
                 }
@@ -77,7 +79,10 @@ public class TribesCmd extends TribeCommand {
                 Tribe g = new Tribe(args[1], (Player)sender).push();
                 TribeLoader.tribesList.add(g);
 
-                Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId()))).where("id", WhereType.EQUALS, Integer.toString((int)Tribes.Players.get(Bukkit.getPlayer(sender.getName()), "id")));
+                Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int)Tribes.Players.get((Player)sender, "id")));
+                Tribes.log(Level.INFO, Integer.toString((int)Tribes.Players.get((Player)sender, "id")));
+                Tribes.log(Level.INFO, Integer.toString(g.getId()));
+                q.query();
                 q.close();
 
                 Message.message(sender, "&9You have successfully created the tribe &e" + g.getName() + "&9.");
@@ -85,6 +90,7 @@ public class TribesCmd extends TribeCommand {
                 break;
             case "invite":
                 if(args.length != 2) {
+                    Message.message(sender, "&cProper usage:");
                     Message.message(sender, "&c/t invite <name>");
                     return true;
                 }
@@ -128,7 +134,7 @@ public class TribesCmd extends TribeCommand {
 
                 TribeLoader.tribesList.remove(t);
 
-                Query h = new Query(QueryType.DELETE, "`tribes`").where("id", WhereType.EQUALS, Integer.toString(t.getId())).limit(1);
+                Query h = new Query(QueryType.DELETE, "`tribes`").where("id", WhereType.EQUALS, Integer.toString(t.getId()));
                 h.query();
                 h.close();
 

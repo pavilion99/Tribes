@@ -72,7 +72,7 @@ public class Tribes extends JavaPlugin {
         saveDefaultConfig();
 
         for(Player p : Bukkit.getOnlinePlayers()) {
-            loadPlayer(p);
+            Database.loadPlayer(p);
         }
     }
 
@@ -126,57 +126,6 @@ public class Tribes extends JavaPlugin {
 
     public static File getDataDir() {
         return dDir;
-    }
-
-
-
-    public static void loadPlayer(Player p) {
-        ResultSet rs = new Query(QueryType.SELECT, "*", "`users`").query();
-
-        try {
-            while (rs.next()) {
-
-                String dbUUID = rs.getString("uuid");
-                Tribes.log(Level.INFO, dbUUID);
-                String playerUUID = p.getUniqueId().toString();
-                if(dbUUID.equalsIgnoreCase(playerUUID)) {
-
-                    if(!(rs.getString("name").equalsIgnoreCase(p.getName())))
-                        new Query(QueryType.UPDATE, "`users`").set(new Set("name", p.getName())).where("`uuid`", WhereType.EQUALS, p.getUniqueId().toString()).limit(1).query();
-
-                    Tribe t = null;
-
-                    for(Tribe x : TribeLoader.tribesList) {
-                        if(x.getId() == rs.getInt("tribe"))
-                            t = x;
-                    }
-
-                    Tribes.Players.put(p, "tribe", t);
-                    if(t != null)
-                        Tribes.Players.put(p, "tribeRank", t.getMembers().get(p));
-                    else
-                        Tribes.Players.put(p, "tribeRank", null);
-                    Tribes.Players.put(p, "id", rs.getInt("id"));
-
-                    Tribes.log(Level.INFO, "Loaded player " + p.getName() + " with UUID " + p.getUniqueId().toString());
-
-                    return;
-                }
-
-            }
-
-            Query q = new Query(QueryType.INSERTINTO, "`users`").columns("uuid", "name").values("'" + p.getUniqueId().toString() + "'", "'" + p.getName() + "'");
-            ResultSet r = q.query(true);
-
-            Tribes.Players.put(p, "id", r.getInt(1));
-
-            r.close();
-            rs.close();
-            q.close();
-        }catch(SQLException ex) {
-            ex.printStackTrace();
-            Tribes.log(Level.SEVERE, "SQL failed!");
-        }
     }
 
 }
