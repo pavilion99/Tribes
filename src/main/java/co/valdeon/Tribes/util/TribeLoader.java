@@ -2,6 +2,7 @@ package co.valdeon.Tribes.util;
 
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.TribeRank;
+import co.valdeon.Tribes.components.TribeTier;
 import co.valdeon.Tribes.storage.Database;
 import co.valdeon.Tribes.components.Tribe;
 import org.bukkit.Chunk;
@@ -30,8 +31,9 @@ public abstract class TribeLoader {
             List<Chunk> chunks = (List<Chunk>)data.get("chunks");
             int coins = (int)data.get("coins");
             ArrayList<OfflinePlayer> invitees = (ArrayList<OfflinePlayer>)data.get("invitees");
+            TribeTier tier = (TribeTier)data.get("tier");
 
-            Tribe t = new Tribe(name, id, members, chunks, coins, invitees);
+            Tribe t = new Tribe(name, id, members, chunks, coins, invitees, tier);
 
             tribesList.add(t);
             ownedChunks.put(t, chunks);
@@ -59,6 +61,13 @@ public abstract class TribeLoader {
     public static Tribe getTribeFromString(String s) {
         for(Tribe x : tribesList)
             if(x.getName().equals(s))
+                return x;
+        return null;
+    }
+
+    public static Tribe getTribeFromStringIgnoreCase(String s) {
+        for(Tribe x : tribesList)
+            if(x.getName().equalsIgnoreCase(s))
                 return x;
         return null;
     }

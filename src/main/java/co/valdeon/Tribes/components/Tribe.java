@@ -33,9 +33,9 @@ public class Tribe {
         this.ownedChunks.add(creator.getPlayer().getLocation().getChunk());
     }
 
-    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees) {
+    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier) {
         this.name = name;
-        this.tier = TribeTier.getTierFromCoins(coins);
+        this.tier = tier;
         this.members = members;
         this.ownedChunks = ownedChunks;
         this.id = id;
@@ -151,17 +151,22 @@ public class Tribe {
 
     public void invite(OfflinePlayer p) {
         this.invitees.add(p);
-        Message.message(p.getPlayer(), "&8You've been invited to join &e" + this.name + "&8!");
+        Message.message(p.getPlayer(), Message.format("&8You've been invited to join &e" + this.name + "&8!");
         Message.message(p.getPlayer(), "Use [/t join " + this.name + "] to join");
     }
 
     public void join(OfflinePlayer p){
         this.members.put(p, TribeRank.MEMBER);
         Message.message(p.getPlayer(), "&8You have successfully joined &e" + this.name + "&8.");
+
     }
 
     public void join(OfflinePlayer p, TribeRank t){
         this.members.put(p, t);
+    }
+
+    public List<Chunk> getChunks() {
+        return this.ownedChunks;
     }
 
 }

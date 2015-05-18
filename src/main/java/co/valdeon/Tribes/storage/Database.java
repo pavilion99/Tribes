@@ -3,6 +3,7 @@ package co.valdeon.Tribes.storage;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
+import co.valdeon.Tribes.components.TribeTier;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
@@ -56,6 +57,7 @@ public class Database {
                 List<OfflinePlayer> invitees = getInviteesFromString(r.getString("invitees"));
                 int coins = r.getInt("coins");
                 HashMap<OfflinePlayer, TribeRank> members = getTribeMembers(id);
+                TribeTier tier = TribeTier.getTier(r.getString("tier"));
 
                 HashMap<String, Object> internal = new HashMap<>();
 
@@ -65,6 +67,7 @@ public class Database {
                 internal.put("invitees", invitees);
                 internal.put("coins", coins);
                 internal.put("members", members);
+                internal.put("tier", tier);
 
                 tribes.put(name, internal);
             }
@@ -136,9 +139,10 @@ public class Database {
         String name = t.getName();
         String invitees = t.getInviteeString();
         String chunks = t.getChunkString();
+        String tier = t.getTier().tierString;
 
         if(id == 0) {
-            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'");
+            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks", "tier").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'", "'" + tier + "'");
             ResultSet r = q.query(true);
 
             try {
@@ -154,7 +158,7 @@ public class Database {
                 return 0;
             }
         } else {
-            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins))).where("id", WhereType.EQUALS, Integer.toString(id)).limit(1);
+            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins)), new Set("tier", "'" + tier + "'")).where("id", WhereType.EQUALS, Integer.toString(id)).limit(1);
             q.close();
             return 0;
         }
@@ -212,6 +216,19 @@ public class Database {
         } catch(SQLException e) {
             Tribes.log(Level.SEVERE, "Failed to load player with UUID " + p.getUniqueId().toString() + " and name " + p.getName() + " from the database.");
         }
+    }
+
+    public static void setPlayerMemberOfTribe(Player p, Tribe t, TribeRank r) {
+        String uuid = p.getUniqueId().toString();
+        int id = t.getId();
+        String rank = r.getName();
+
+        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "'" + rank + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'");
+        q.query();
+        q.close();
+
+        Tribes.Players.put(p, "tribe", id);
+        Tribes.Players.put(p, "tribeRank", r.getName());
     }
 
 }

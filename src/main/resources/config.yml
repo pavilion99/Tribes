@@ -1,11 +1,53 @@
-consoleExecutionFailure: '&cThis command cannot be run from the console.'
-invalidArgs: '&cInvalid arguments!'
 worldName: 'world'
+
+colorOne: '9'
+colorTwo: 'e'
+errorColor: 'c'
+
+# Each of these sets the
 tierOneChunks: 25
 tierTwoChunks: 50
 tierThreeChunks: 75
 tierFourChunks: 100
 tierFiveChunks: 125
+
 db: 'Tribes'
 
-earnCoinsMessage: '&e{0}&8 has earned &e{1}&8 coins for &e{2}&8.'
+# {0}: colorOne; {1}: colorTwo
+
+# Sent to all members of a tribe when someone earns coins for the tribe.
+# {2}: Player who earned the coins; {3}: the amount of coins; {4}: the name of the tribe
+earnCoinsMessage: '{0}{2}{1} has earned {0}{3}{1} coins for {0}{4}{1}.'
+
+# Sent to the console when the main command is run from the console.
+consoleExecutionFailure: 'This command cannot be run from the console.'
+
+# Sent when the argument on /t is invalid
+invalidArgs: 'Invalid arguments!'
+
+# Sent when the arguments on a subcommand of /t are incorrect
+invalidSubargs: 'Correct usage:'
+
+# Sent when someone is invited to a tribe
+# {2}: the inviter; {3}: the tribe name
+invite: '{1}{2}{0} has invited you to join {1}{3}{0}.'
+
+# Sent when someone invites someone else to join a tribe
+# {2}: the invitee; {3}: the tribe name
+inviteSender: '{0}You have invited {1}{2}{0} to join {1}{3}{0}.'
+
+# Sent when someone joins a tribe
+# {2}: the tribe name
+join: '{0}You have successfully joined {1}{2}{0}.'
+
+# Sent when someone destroys a tribe
+# {2}: the tribe name
+destroy: '{0}You have successfully destroyed {1}{2}{0}.'
+
+# Sent when someone requests tribe coins
+# {2}: the tribe name; {3} the amount of coins
+coins: '{1}{2}{0} has {1}{3}{0} coins.'
+
+# Sent when someone creates a tribe
+# {2}: the tribe name
+create: '{0}You have successfully created {1}{2}{0}.'

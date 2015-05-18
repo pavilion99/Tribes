@@ -3,10 +3,7 @@ package co.valdeon.Tribes.commands;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
-import co.valdeon.Tribes.storage.Query;
-import co.valdeon.Tribes.storage.QueryType;
-import co.valdeon.Tribes.storage.Set;
-import co.valdeon.Tribes.storage.WhereType;
+import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
@@ -23,7 +20,7 @@ import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info"};
 
     public boolean execute(CommandSender s, String[] args) {
         if(s instanceof ConsoleCommandSender) {
@@ -79,7 +76,7 @@ public class TribesCmd extends TribeCommand {
                 Tribe g = new Tribe(args[1], (Player)sender).push();
                 TribeLoader.tribesList.add(g);
 
-                Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int)Tribes.Players.get((Player)sender, "id")));
+                Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
                 Tribes.log(Level.INFO, Integer.toString((int)Tribes.Players.get((Player)sender, "id")));
                 Tribes.log(Level.INFO, Integer.toString(g.getId()));
                 q.query();
@@ -142,6 +139,8 @@ public class TribesCmd extends TribeCommand {
                 h.query();
                 h.close();
 
+                Message.message(sender, "You have destroyed the tribe " + t.getName());
+
                 break;
             case "coins":
                 break;
@@ -160,11 +159,45 @@ public class TribesCmd extends TribeCommand {
 
                 if(tribe != null) {
                     tribe.join((Player)sender);
+                    Database.setPlayerMemberOfTribe((Player)sender, tribe, tribe.getRank((Player)sender));
                 }else {
                     Message.message(sender, "&cThat tribe does not exist.");
                     return true;
                 }
 
+                break;
+            case "info":
+                if(args.length == 1) {
+                    Tribe ta = TribeLoader.getTribe((Player)sender);
+
+                    if(ta != null) {
+                        Message.message(sender, "&9Tribe Information");
+                        Message.message(sender, "&9Name: &e" + ta.getName());
+                        Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
+                        Message.message(sender, "&9Tribe tier: &e" + ta.getTier().name());
+                        Message.message(sender, "&9Members: &e" + ta.getMembers().size());
+                        Message.message(sender, "&9Coins: &e" + ta.getCoins());
+                    } else {
+                        Message.message(sender, "&cYou are not currently in a tribe.");
+                    }
+                } else if(args.length == 2) {
+                    Tribe ta = TribeLoader.getTribeFromStringIgnoreCase(args[1]);
+
+                    if(ta != null) {
+                        Message.message(sender, "&9Tribe Information");
+                        Message.message(sender, "&9Name: &e" + ta.getName());
+                        Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
+                        Message.message(sender, "&9Tribe tier: &e" + ta.getTier().name());
+                        Message.message(sender, "&9Members: &e" + ta.getMembers().size());
+                        Message.message(sender, "&9Coins: &e" + ta.getCoins());
+                    } else {
+                        Message.message(sender, "&cThat tribe doesn't exist.");
+                    }
+                } else {
+                    Message.message(sender, "&cProper usage:");
+                    Message.message(sender, "&c/t info [name]");
+                    return true;
+                }
                 break;
             default:
                 Message.messageInvalidArgs(sender, this.getClass());

@@ -7,7 +7,7 @@ database: true
 commands:
   tribes:
     description: Main command for Tribes.
-    aliases: [t]
+    aliases: [t, tribe]
     permission: ScortexMC.tribes.tribes
 permissions:
   ScortexMC.tribes.tribes:
