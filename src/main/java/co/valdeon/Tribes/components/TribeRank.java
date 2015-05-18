@@ -31,4 +31,21 @@ public enum TribeRank {
         return this.name;
     }
 
+    public int getPower() {
+        return this.power;
+    }
+
+    public static TribeRank getRankFromPower(int i) {
+        switch(i) {
+            case 1:
+                return MEMBER;
+            case 2:
+                return OFFICER;
+            case 3:
+                return CHIEF;
+            default:
+                return MEMBER;
+        }
+    }
+
 }

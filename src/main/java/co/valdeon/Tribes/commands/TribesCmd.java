@@ -3,12 +3,15 @@ package co.valdeon.Tribes.commands;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
+import co.valdeon.Tribes.events.TribeInvitePlayerEvent;
+import co.valdeon.Tribes.events.TribeKickPlayerEvent;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.TribeCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,11 +19,13 @@ import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list"};
 
     public boolean execute(CommandSender s, String[] args) {
         if(s instanceof ConsoleCommandSender) {
@@ -56,28 +61,28 @@ public class TribesCmd extends TribeCommand {
     private boolean run(CommandSender sender, String s, String[] args) {
         switch(s) {
             case "create":
-                if(args.length != 2) {
+                if (args.length != 2) {
                     Message.message(sender, "&cProper usage:");
                     Message.message(sender, "&c/t create <name>");
                     return true;
                 }
 
-                if(TribeLoader.tribeExists(args[1])) {
+                if (TribeLoader.tribeExists(args[1])) {
                     Message.message(sender, "&cThat tribe already exists.");
                     return true;
                 }
 
-                if(TribeLoader.getTribe((Player)sender) != null) {
+                if (TribeLoader.getTribe((Player) sender) != null) {
                     Message.message(sender, "&cYou are already in a tribe; you must destroy it before creating a new tribe.");
                     return true;
                 }
 
 
-                Tribe g = new Tribe(args[1], (Player)sender).push();
+                Tribe g = new Tribe(args[1], (Player) sender).push();
                 TribeLoader.tribesList.add(g);
 
                 Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
-                Tribes.log(Level.INFO, Integer.toString((int)Tribes.Players.get((Player)sender, "id")));
+                Tribes.log(Level.INFO, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
                 Tribes.log(Level.INFO, Integer.toString(g.getId()));
                 q.query();
                 q.close();
@@ -86,13 +91,13 @@ public class TribesCmd extends TribeCommand {
 
                 break;
             case "invite":
-                if(args.length != 2) {
-                    Message.message(sender, "&cProper usage:");
+                if (args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
                     Message.message(sender, "&c/t invite <name>");
                     return true;
                 }
 
-                if(TribeLoader.getTribe((Player)sender) == null) {
+                if (TribeLoader.getTribe((Player) sender) == null) {
                     Message.message(sender, "&cYou must be in a tribe before you can invite someone else.");
                     return true;
                 }
@@ -102,30 +107,62 @@ public class TribesCmd extends TribeCommand {
 
                 try {
                     if (rr.next()) {
-                        Message.message(sender, "&8Successfully invited &e" + args[1] + "&8 to join &e" + TribeLoader.getTribe((Player)sender).getName() + "&8.");
+                        Message.message(sender, Message.format(Config.inviteSender, Config.colorOne, Config.colorTwo, args[1], TribeLoader.getTribe((Player) sender).getName()));
+                        Tribes.call(new TribeInvitePlayerEvent((Player) sender, Bukkit.getOfflinePlayer(UUID.fromString(rr.getString("uuid"))), TribeLoader.getTribe((Player) sender)));
                         rr.close();
                         qa.close();
                         return true;
                     }
-                }catch(SQLException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
-                Message.message(sender, "&cUnable to find a player with that name.");
+                Message.message(sender, err(), Config.noPlayer);
 
                 break;
             case "kick":
-                break;
-            case "destroy":
-                Tribe t = Tribe.getTribe((Player)sender);
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t kick <player>");
+                }
 
-                if(t == null) {
-                    Message.message(sender, "&cYou are not in a tribe.");
+                if(TribeLoader.getTribe((Player)sender) == null) {
+                    Message.message(sender, err(), Config.notInTribe);
                     return true;
                 }
 
-                if(t.getRank((Player)sender) != TribeRank.CHIEF) {
-                    Message.message(sender, "&You must be the chief to destroy the tribe.");
+                Tribe tripe = TribeLoader.getTribe((Player)sender);
+
+                if(tripe.getRank((Player)sender).getPower() < Config.kickPower) {
+                    Message.message(sender, err(), Config.needMorePower);
+                    return true;
+                }
+
+                if(!(tripe.getMembers().keySet()).contains(Bukkit.getOfflinePlayer(args[1]))) {
+                    Message.message(sender, err(), Config.playerNotInTribe);
+                }
+
+                OfflinePlayer kickee = Bukkit.getOfflinePlayer(args[1]);
+
+                if(tripe.getRank(kickee).getPower() > tripe.getRank((Player)sender).getPower()) {
+                    Message.message(sender, err(), Config.playerHigherRank);
+                }
+
+                tripe.kick(kickee).push();
+
+                Tribes.call(new TribeKickPlayerEvent((Player)sender, kickee, tripe));
+
+                break;
+            case "destroy":
+                Tribe t = Tribe.getTribe((Player) sender);
+
+                if (t == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if (t.getRank((Player) sender) != TribeRank.CHIEF) {
+                    Message.message(sender, err(), Config.notChief);
                     return true;
                 }
 
@@ -139,38 +176,54 @@ public class TribesCmd extends TribeCommand {
                 h.query();
                 h.close();
 
-                Message.message(sender, "You have destroyed the tribe " + t.getName());
+                Message.message(sender, Message.format(Config.destroy, Config.colorOne, Config.colorTwo, t.getName()));
 
                 break;
             case "coins":
-                break;
-            case "join":
-                if(args.length != 2) {
-                    Message.message(sender, "&c/t join <name>");
+                if (args.length != 1) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t coins");
                     return true;
                 }
 
-                if(Tribe.getTribe((Player)sender) != null) {
-                    Message.message(sender, "&cYou are already a member of " + Tribe.getTribe((Player)sender).getName() + ", please leave before attempting to join a new tribe.");
+                if (TribeLoader.getTribe((Player) sender) == null) {
+                    Message.message(sender, Config.notInTribe);
+                    return true;
+                }
+
+                Tribe tg = TribeLoader.getTribe((Player) sender);
+
+                Message.message(sender, Message.format(Config.coins, Config.colorOne, Config.colorTwo, tg.getName(), Integer.toString(tg.getCoins())));
+
+                break;
+            case "join":
+                if (args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t join <name>");
+                    return true;
+                }
+
+                if (Tribe.getTribe((Player) sender) != null) {
+                    Message.message(sender, err(), Message.format(Config.inExistingTribe, TribeLoader.getTribe((Player) sender).getName()));
                     return true;
                 }
 
                 Tribe tribe = TribeLoader.getTribeFromString(args[1]);
 
-                if(tribe != null) {
-                    tribe.join((Player)sender);
-                    Database.setPlayerMemberOfTribe((Player)sender, tribe, tribe.getRank((Player)sender));
-                }else {
-                    Message.message(sender, "&cThat tribe does not exist.");
+                if (tribe != null) {
+                    tribe.join((Player) sender);
+                    Database.setPlayerMemberOfTribe((Player) sender, tribe, tribe.getRank((Player) sender));
+                } else {
+                    Message.message(sender, err(), Config.noExist);
                     return true;
                 }
 
                 break;
             case "info":
-                if(args.length == 1) {
-                    Tribe ta = TribeLoader.getTribe((Player)sender);
+                if (args.length == 1) {
+                    Tribe ta = TribeLoader.getTribe((Player) sender);
 
-                    if(ta != null) {
+                    if (ta != null) {
                         Message.message(sender, "&9Tribe Information");
                         Message.message(sender, "&9Name: &e" + ta.getName());
                         Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
@@ -180,10 +233,10 @@ public class TribesCmd extends TribeCommand {
                     } else {
                         Message.message(sender, "&cYou are not currently in a tribe.");
                     }
-                } else if(args.length == 2) {
+                } else if (args.length == 2) {
                     Tribe ta = TribeLoader.getTribeFromStringIgnoreCase(args[1]);
 
-                    if(ta != null) {
+                    if (ta != null) {
                         Message.message(sender, "&9Tribe Information");
                         Message.message(sender, "&9Name: &e" + ta.getName());
                         Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
@@ -194,16 +247,73 @@ public class TribesCmd extends TribeCommand {
                         Message.message(sender, "&cThat tribe doesn't exist.");
                     }
                 } else {
-                    Message.message(sender, "&cProper usage:");
+                    Message.message(sender, err(), Config.invalidSubargs);
                     Message.message(sender, "&c/t info [name]");
                     return true;
                 }
                 break;
+            case "claim":
+                if (args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    return true;
+                }
+
+                if (TribeLoader.getTribe((Player) sender) == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                Tribe th = TribeLoader.getTribe((Player) sender);
+
+                if (!(th.getRank((Player) sender).getPower() >= 2)) {
+                    Message.message(sender, err(), Config.noPower);
+                    return true;
+                }
+
+                Chunk x = ((Player)sender).getWorld().getChunkAt(((Player)sender).getLocation());
+
+                // Make sure this chunk isn't already owned
+                if (th.getChunks().contains(((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation()))) {
+                    Message.message(sender, err(), Config.alreadyOwned);
+                    return true;
+                }
+
+                for (List<Chunk> chonk : TribeLoader.ownedChunks.values()) {
+                    if(chonk.contains(x)) {
+                        Message.message(sender, err(), Config.ownedByOtherTribe);
+                        return true;
+                    }
+                }
+
+                th.addChunk(x).push();
+
+                break;
+            case "help":
+                echoInfo(sender);
+                return true;
+            case "list":
+                String list = "{1}";
+
+                int i = 0;
+                while(i < TribeLoader.tribesList.size()) {
+                    list += TribeLoader.tribesList.get(i);
+                    if(!((i + 1) >= TribeLoader.tribesList.size()))
+                        list += "{0}, {1}";
+                    i++;
+                }
+
+                Message.message(sender, Message.format(list, Config.colorOne, Config.colorTwo));
+
+                return true;
             default:
                 Message.messageInvalidArgs(sender, this.getClass());
                 return true;
         }
         return true;
+    }
+
+    private static String err() {
+        return "&" + Config.errorColor;
     }
 
 }

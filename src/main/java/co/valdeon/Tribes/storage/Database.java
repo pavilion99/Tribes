@@ -1,6 +1,7 @@
 package co.valdeon.Tribes.storage;
 
 import co.valdeon.Tribes.Tribes;
+import co.valdeon.Tribes.components.AbilityType;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
 import co.valdeon.Tribes.components.TribeTier;
@@ -58,6 +59,7 @@ public class Database {
                 int coins = r.getInt("coins");
                 HashMap<OfflinePlayer, TribeRank> members = getTribeMembers(id);
                 TribeTier tier = TribeTier.getTier(r.getString("tier"));
+                List<AbilityType> abilities = getAbilitiesFromString(r.getString("abilities"));
 
                 HashMap<String, Object> internal = new HashMap<>();
 
@@ -68,6 +70,7 @@ public class Database {
                 internal.put("coins", coins);
                 internal.put("members", members);
                 internal.put("tier", tier);
+                internal.put("abilities", abilities);
 
                 tribes.put(name, internal);
             }
@@ -140,9 +143,10 @@ public class Database {
         String invitees = t.getInviteeString();
         String chunks = t.getChunkString();
         String tier = t.getTier().tierString;
+        String abilities = t.getAbilityString();
 
         if(id == 0) {
-            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks", "tier").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'", "'" + tier + "'");
+            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks", "tier", "abilities").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'", "'" + tier + "'", "'" + abilities, "'");
             ResultSet r = q.query(true);
 
             try {
@@ -158,7 +162,7 @@ public class Database {
                 return 0;
             }
         } else {
-            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins)), new Set("tier", "'" + tier + "'")).where("id", WhereType.EQUALS, Integer.toString(id)).limit(1);
+            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins)), new Set("tier", "'" + tier + "'"), new Set("abilities", "'" + abilities + "'")).where("id", WhereType.EQUALS, Integer.toString(id)).limit(1);
             q.close();
             return 0;
         }
@@ -229,6 +233,18 @@ public class Database {
 
         Tribes.Players.put(p, "tribe", id);
         Tribes.Players.put(p, "tribeRank", r.getName());
+    }
+
+    private static List<AbilityType> getAbilitiesFromString(String s) {
+        List<AbilityType> abilities = new ArrayList<>();
+        String streng[] = s.split(";");
+        for(String strang : streng) {
+            AbilityType type = AbilityType.getAbilityTypeFromString(strang);
+            if(type != null) {
+                abilities.add(type);
+            }
+        }
+        return abilities;
     }
 
 }

@@ -1,18 +1,29 @@
+# World name of the overworld
 worldName: 'world'
 
+# Sets chat formatting colors
 colorOne: '9'
 colorTwo: 'e'
 errorColor: 'c'
 
-# Each of these sets the
+# Each of these sets the amount of chunks each tier can claim
 tierOneChunks: 25
 tierTwoChunks: 50
 tierThreeChunks: 75
 tierFourChunks: 100
 tierFiveChunks: 125
 
+# What to name the database, or what database to access if one is already created
 db: 'Tribes'
 
+# Decides if chat will be prefixed with a tribe
+chatFeatures: true
+
+# Power required to kick a player
+# 2 = OFFICER or CHIEF; 3 = CHIEF only
+kickPower: 3
+
+# Universal formatting features
 # {0}: colorOne; {1}: colorTwo
 
 # Sent to all members of a tribe when someone earns coins for the tribe.
@@ -51,3 +62,47 @@ coins: '{1}{2}{0} has {1}{3}{0} coins.'
 # Sent when someone creates a tribe
 # {2}: the tribe name
 create: '{0}You have successfully created {1}{2}{0}.'
+
+# Sent to a player who is kicked from a tribe
+# {2}: the tribe name; {3}: the kicker's name
+kicked: '{1}{3}{0} has kicked you from {1}{2}{0}.'
+
+# Sent to a player who kicks someone from a tribe
+# {2}: the tribe name; {3}: the kicked player's name
+kickedKickee: '{0}You have successfully kicked {1}{3}{0} from {1}{2}{0}.'
+
+
+# ------ Error Messages ------ #
+
+# Sent when a tribe doesn't exist.
+noExist: 'That tribe doesn't exist.'
+
+# Sent when someone tries to join a tribe while being a member of another tribe.
+inExistingTribe: 'You are already a member of {0}, please leave before attempting to join a new tribe.'
+
+# Sent when a player attempts to destroy a tribe but is not in a tribe.
+notInTribe: 'You are not currently in a tribe.'
+
+# Sent when a player attempts to destroy a tribe but is not the chief.
+notChief: 'You must be the chief to destroy the tribe.'
+
+# Sent when a player cannot be found
+noPlayer: 'Unable to find a player with that name.'
+
+# Sent when a player tries to claim land but doesn't have appropriate power.
+noPower: 'You must be an officer or chief to claim land.'
+
+# Sent when a player tries to claim a chunk that is already owned by the tribe
+alreadyOwned: 'Your tribe already owns this land.'
+
+# Sent when a player tries to claim land owned by another tribe
+ownedByOtherTribe: 'This land is owned by a different tribe.'
+
+# Sent when a player of too low a rank tries to kick another player from his or her tribe
+needMorePower: 'You must be of higher rank to do this.'
+
+# Sent when a player tries to kick someone who isn't in his or her tribe
+playerNotInTribe: 'That player is not in your tribe.'
+
+# Sent when a player attempts to kick someone of higher rank
+playerHigherRank: 'You may not kick someone of higher rank than you.'

@@ -1,10 +1,8 @@
 package co.valdeon.Tribes.util;
 
 import co.valdeon.Tribes.Tribes;
-import co.valdeon.Tribes.components.TribeRank;
-import co.valdeon.Tribes.components.TribeTier;
+import co.valdeon.Tribes.components.*;
 import co.valdeon.Tribes.storage.Database;
-import co.valdeon.Tribes.components.Tribe;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 
@@ -32,8 +30,9 @@ public abstract class TribeLoader {
             int coins = (int)data.get("coins");
             ArrayList<OfflinePlayer> invitees = (ArrayList<OfflinePlayer>)data.get("invitees");
             TribeTier tier = (TribeTier)data.get("tier");
+            List<AbilityType> abilities = (ArrayList<AbilityType>)data.get("abilities");
 
-            Tribe t = new Tribe(name, id, members, chunks, coins, invitees, tier);
+            Tribe t = new Tribe(name, id, members, chunks, coins, invitees, tier, abilities);
 
             tribesList.add(t);
             ownedChunks.put(t, chunks);
@@ -76,6 +75,15 @@ public abstract class TribeLoader {
         for(Tribe x : tribesList)
             if(x.getId() == i)
                 return x;
+        return null;
+    }
+
+    public static Tribe getChunkOwner(Chunk c) {
+        for(Tribe tribe : ownedChunks.keySet()) {
+            if(ownedChunks.get(tribe).contains(c)) {
+                return tribe;
+            }
+        }
         return null;
     }
 

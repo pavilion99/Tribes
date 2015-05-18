@@ -3,9 +3,7 @@ package co.valdeon.Tribes;
 import co.valdeon.Tribes.commands.TribesCmd;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.events.TribeEarnCoinsEvent;
-import co.valdeon.Tribes.listeners.PlayerJoinListener;
-import co.valdeon.Tribes.listeners.PlayerQuitListener;
-import co.valdeon.Tribes.listeners.TribeEarnCoinsListener;
+import co.valdeon.Tribes.listeners.*;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.CommandLoader;
@@ -15,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,13 +26,12 @@ import java.util.logging.Level;
 
 public class Tribes extends JavaPlugin {
 
-    private Config config;
     private static Database db;
     private static File dDir;
 
     @Override
     public void onEnable() {
-        this.config = new Config(this);
+        new Config(this);
         dDir = getDataFolder();
 
         registerCommands();
@@ -48,15 +46,16 @@ public class Tribes extends JavaPlugin {
         load();
     }
 
-    @Override
-    public void onDisable() {
-
-    }
-
     public void registerListeners() {
         getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getPluginManager().registerEvents(new PlayerQuitListener(), this);
         getPluginManager().registerEvents(new TribeEarnCoinsListener(), this);
+        getPluginManager().registerEvents(new TribeInvitePlayerListener(), this);
+        getPluginManager().registerEvents(new TribeKickPlayerListener(), this);
+        if(Config.chatFeatures) {
+            getPluginManager().registerEvents(new PlayerChatListener(), this);
+        }
+        getPluginManager().registerEvents(new PlayerMoveListener(this), this);
     }
 
     public void registerCommands() {
@@ -80,20 +79,12 @@ public class Tribes extends JavaPlugin {
         return getServer().getPluginManager();
     }
 
-    public Config getCfg() {
-        return this.config;
-    }
-
     public FileConfiguration getBukkitCfg() {
         return getConfig();
     }
 
     public static void log(Level l, String s) {
         Bukkit.getLogger().log(l, s);
-    }
-
-    public static Connection getCon() {
-        return db.getConnection();
     }
 
     public static Database getDB() {
@@ -126,6 +117,10 @@ public class Tribes extends JavaPlugin {
 
     public static File getDataDir() {
         return dDir;
+    }
+
+    public static void call(Event e) {
+        Bukkit.getPluginManager().callEvent(e);
     }
 
 }

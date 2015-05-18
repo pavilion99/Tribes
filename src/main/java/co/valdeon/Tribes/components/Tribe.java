@@ -2,6 +2,7 @@ package co.valdeon.Tribes.components;
 
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.BiMap;
+import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ public class Tribe {
     private OfflinePlayer chief = null;
     private List<OfflinePlayer> officers = new ArrayList<>();
     private List<OfflinePlayer> invitees = new ArrayList<>();
+    private List<AbilityType> abilities = new ArrayList<>();
 
     public Tribe(String name, OfflinePlayer creator) {
         this.name = name;
@@ -33,7 +35,7 @@ public class Tribe {
         this.ownedChunks.add(creator.getPlayer().getLocation().getChunk());
     }
 
-    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier) {
+    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier, List<AbilityType> abilities) {
         this.name = name;
         this.tier = tier;
         this.members = members;
@@ -48,6 +50,7 @@ public class Tribe {
             }
         }
         this.invitees = invitees;
+        this.abilities = abilities;
     }
 
     public int getId() {
@@ -151,13 +154,11 @@ public class Tribe {
 
     public void invite(OfflinePlayer p) {
         this.invitees.add(p);
-        Message.message(p.getPlayer(), Message.format("&8You've been invited to join &e" + this.name + "&8!");
-        Message.message(p.getPlayer(), "Use [/t join " + this.name + "] to join");
     }
 
     public void join(OfflinePlayer p){
         this.members.put(p, TribeRank.MEMBER);
-        Message.message(p.getPlayer(), "&8You have successfully joined &e" + this.name + "&8.");
+        Message.message(p.getPlayer(), Message.format(Config.join, Config.colorOne, Config.colorTwo, this.getName()));
 
     }
 
@@ -167,6 +168,37 @@ public class Tribe {
 
     public List<Chunk> getChunks() {
         return this.ownedChunks;
+    }
+
+    public Tribe addChunk(Chunk t) {
+        this.ownedChunks.add(t);
+        TribeLoader.ownedChunks.get(this).add(t);
+        return this;
+    }
+
+    public Tribe kick(OfflinePlayer p) {
+        if(!this.members.keySet().contains(p)) {
+            return this;
+        }
+
+        this.members.remove(p);
+        return this;
+    }
+
+    public List<AbilityType> getAbilities() {
+        return this.abilities;
+    }
+
+    public String getAbilityString() {
+        String fin = "";
+        int i = 0;
+        while(i < this.abilities.size()) {
+            if(this.abilities.get(i) != null)
+                fin += this.abilities.get(i).getText();
+            if(!((i + 1) >= this.abilities.size()))
+                fin += ";";
+        }
+        return fin;
     }
 
 }

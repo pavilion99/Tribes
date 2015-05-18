@@ -15,6 +15,8 @@ public class Config {
     public static int tierFourChunks;
     public static int tierFiveChunks;
 
+    public static int kickPower;
+
     public static String colorOne;
     public static String colorTwo;
     public static String errorColor;
@@ -27,7 +29,23 @@ public class Config {
     public static String create;
     public static String invite;
     public static String coins;
+    public static String destroy;
     public static String inviteSender;
+    public static String noExist;
+    public static String inExistingTribe;
+    public static String notInTribe;
+    public static String notChief;
+    public static String noPlayer;
+    public static String noPower;
+    public static String alreadyOwned;
+    public static String ownedByOtherTribe;
+    public static String needMorePower;
+    public static String playerNotInTribe;
+    public static String playerHigherRank;
+    public static String kicked;
+    public static String kickedKickee;
+
+    public static boolean chatFeatures;
 
     public Config(Tribes tribes) {
         this.tribes = tribes;
@@ -42,14 +60,30 @@ public class Config {
         tierFourChunks = (int)get(int.class, "tierFourChunks");
         tierFiveChunks = (int)get(int.class, "tierFiveChunks");
         earnCoinsMessage = (String)get(String.class, "earnCoinsMessage");
-        colorOne = (String)get(String.class, "colorOne");
-        colorTwo = (String)get(String.class, "colorTwo");
+        colorOne = "&" + get(String.class, "colorOne");
+        colorTwo = "&" + get(String.class, "colorTwo");
         errorColor = (String)get(String.class, "errorColor");
         join = (String)get(String.class, "join");
         create = (String)get(String.class, "create");
         invite = (String)get(String.class, "invite");
         coins = (String)get(String.class, "coins");
         inviteSender = (String)get(String.class, "inviteSender");
+        noExist = (String)get(String.class, "noExist");
+        inExistingTribe = (String)get(String.class, "inExistingTribe");
+        notInTribe = (String)get(String.class, "notInTribe");
+        notChief = (String)get(String.class, "notChief");
+        destroy = (String)get(String.class, "destroy");
+        noPlayer = (String)get(String.class, "noPlayer");
+        noPower = (String)get(String.class, "noPower");
+        alreadyOwned = (String)get(String.class, "alreadyOwned");
+        ownedByOtherTribe = (String)get(String.class, "ownedByOtherTribe");
+        kickPower = (int)get(int.class, "kickPower");
+        needMorePower = (String)get(String.class, "needMorePower");
+        playerNotInTribe = (String)get(String.class, "playerNotInTribe");
+        playerHigherRank = (String)get(String.class, "playerHigherRank");
+        kicked = (String)get(String.class, "kicked");
+        kickedKickee = (String)get(String.class, "kickedKickee");
+        chatFeatures = (boolean)get(boolean.class, "chatFeatures");
     }
 
     public Object get(Class c, String path) {
