@@ -14,11 +14,12 @@ public class AbilityStrength extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 60 * 60 * 20, multi));
     }
 
 }

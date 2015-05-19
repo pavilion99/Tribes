@@ -2,9 +2,11 @@ package co.valdeon.Tribes.util;
 
 import co.valdeon.Tribes.Tribes;
 
+import java.util.HashMap;
+
 public class Config {
 
-    private final Tribes tribes;
+    private static Tribes tribes;
 
     public static String dbName;
     public static String world;
@@ -69,11 +71,15 @@ public class Config {
     public static String promoter;
     public static String promotee;
     public static String oneChief;
+    public static String buyAbility;
 
     public static boolean chatFeatures;
 
-    public Config(Tribes tribes) {
-        this.tribes = tribes;
+    public Config(Tribes tribess) {
+        tribes = tribess;
+    }
+
+    public void init() {
         consoleExecutionFailure = (String)get(String.class, "consoleExecutionFailure");
         invalidArgs = (String)get(String.class, "invalidArgs");
         invalidSubargs = (String)get(String.class, "invalidSubargs");
@@ -132,9 +138,10 @@ public class Config {
         promotee = (String)get(String.class, "promotee");
         oneChief = (String)get(String.class, "oneChief");
         saveFrequency = (int)get(int.class, "saveFrequency");
+        buyAbility = (String)get(String.class, "buyAbility");
     }
 
-    public Object get(Class c, String path) {
+    public static Object get(Class c, String path) {
         if(c.equals(String.class)) {
             return tribes.getBukkitCfg().getString(path);
         }else if(c.equals(int.class)) {
@@ -146,6 +153,46 @@ public class Config {
         }else{
             return null;
         }
+    }
+
+    public static class Prices {
+
+        public static int fireResistance, haste, healthBoost, invisibility, jump, nightVision, regen, resistance, saturation, speed, strength, waterBreathing;
+
+        private static HashMap<String, Integer> priceMap = new HashMap<>();
+
+        public void init() {
+            fireResistance = (int)get(int.class, "fireResistance");
+            haste = (int)get(int.class, "haste");
+            healthBoost = (int)get(int.class, "healthBoost");
+            invisibility = (int)get(int.class, "invisibility");
+            jump = (int)get(int.class, "jump");
+            nightVision = (int)get(int.class, "nightVision");
+            regen = (int)get(int.class, "regen");
+            resistance = (int)get(int.class, "resistance");
+            saturation = (int)get(int.class, "saturation");
+            speed = (int)get(int.class, "speed");
+            strength = (int)get(int.class, "strength");
+            waterBreathing = (int)get(int.class, "waterBreathing");
+
+            priceMap.put("fireresistance", fireResistance);
+            priceMap.put("haste", haste);
+            priceMap.put("healthboost", healthBoost);
+            priceMap.put("invisibility", invisibility);
+            priceMap.put("jump", jump);
+            priceMap.put("nightvision", nightVision);
+            priceMap.put("regen", regen);
+            priceMap.put("resistance", resistance);
+            priceMap.put("saturation", saturation);
+            priceMap.put("speed", speed);
+            priceMap.put("strength", strength);
+            priceMap.put("waterbreathing", waterBreathing);
+        }
+
+        public static HashMap<String, Integer> getPriceMap() {
+            return priceMap;
+        }
+
     }
 
 }

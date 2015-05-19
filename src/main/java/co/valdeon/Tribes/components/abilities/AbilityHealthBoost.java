@@ -14,11 +14,12 @@ public class AbilityHealthBoost extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.HEALTH_BOOST);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 60 * 60 * 20, multi));
     }
 
 }

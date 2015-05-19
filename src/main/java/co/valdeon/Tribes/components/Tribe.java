@@ -197,6 +197,23 @@ public class Tribe {
         return fin;
     }
 
+    public String getAbilityString(boolean user) {
+        if(!user)
+            return getAbilityString();
+        String fin = "";
+        AbilityType[] abilitys = this.abilities.toArray(new AbilityType[1]);
+        for(int i = 0; i < abilitys.length; i++) {
+            if(abilitys[i] != null) {
+                fin += abilitys[i].getText();
+                fin += ":";
+                fin += Integer.toString(abilitys[i].getMultiplier() + 1);
+            }
+            if((i + 1) < abilitys.length)
+                fin += ";";
+        }
+        return fin;
+    }
+
     public Tribe subtractCoins(int i) {
         this.coins -= i;
         return this;
@@ -232,6 +249,11 @@ public class Tribe {
 
     public void setRank(OfflinePlayer p, TribeRank t) {
         this.members.put(p, t);
+    }
+
+    public Tribe addAbility(AbilityType a) {
+        this.abilities.add(a);
+        return this;
     }
 
 }

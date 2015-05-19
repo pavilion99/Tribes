@@ -39,7 +39,9 @@ public class Tribes extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new Config(this);
+        new Config(this).init();
+        new Config.Prices().init();
+
         dDir = getDataFolder();
 
         if(!Database.verifyDBConnection())

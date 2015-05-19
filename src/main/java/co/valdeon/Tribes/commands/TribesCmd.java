@@ -1,6 +1,7 @@
 package co.valdeon.Tribes.commands;
 
 import co.valdeon.Tribes.Tribes;
+import co.valdeon.Tribes.components.AbilityType;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
 import co.valdeon.Tribes.components.TribeTier;
@@ -27,7 +28,7 @@ import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability"};
 
     public TribesCmd(Tribes t) {
         super(t);
@@ -282,7 +283,7 @@ public class TribesCmd extends TribeCommand {
                         Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().name());
                         Message.message(sender, Config.colorOne + "Members: " + Config.colorTwo + ta.getMembers().size());
                         Message.message(sender, Config.colorOne + "Coins: " + Config.colorTwo + ta.getCoins());
-                        Message.message(sender, Config.colorOne + "Abilities: " + Config.colorTwo + ta.getAbilityString());
+                        Message.message(sender, Config.colorOne + "Abilities: " + Config.colorTwo + ta.getAbilityString(true));
                         Message.message(sender, Config.footer);
                     } else {
                         Message.message(sender, "&cYou are not currently in a tribe.");
@@ -432,6 +433,60 @@ public class TribesCmd extends TribeCommand {
                         Message.message(sender, err(), Config.fullyUpgraded);
                         break;
                 }
+                return true;
+            case "ability":
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t ability <ability>");
+                    return true;
+                }
+
+                Tribe trile = TribeLoader.getTribe((Player)sender);
+
+                if(trile == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                String ability = args[1];
+
+                int price = Config.Prices.getPriceMap().get(ability.toLowerCase());
+
+                if(price == 0) {
+                    Message.message(sender, err(), "Valid Abilities:");
+                    Message.message(sender, err(), "fireresistance, haste, healthboost, invisibility, jump, nightvision, regen, resistance, saturation, speed, strength, waterbreathing");
+                    return true;
+                }
+
+                AbilityType a = AbilityType.getAbilityTypeFromString(ability.toUpperCase());
+
+                if(a == null) {
+                    Message.message(sender, err(), "Valid Abilities:");
+                    Message.message(sender, err(), "fireresistance, haste, healthboost, invisibility, jump, nightvision, regen, resistance, saturation, speed, strength, waterbreathing");
+                    return true;
+                }
+
+                int cons = trile.getCoins();
+
+                if(cons < price) {
+                    Message.message(sender, err(), Message.format(Config.moreCoins, "&" + Config.errorColor, Config.colorTwo, Integer.toString(price), Integer.toString(price - cons), Integer.toString(cons)));
+                    return true;
+                }
+
+                for(AbilityType gy : trile.getAbilities()) {
+                    if(gy.getText().equals(a.getText())) {
+                        gy.setMultiplier(gy.getMultiplier() + 1);
+                        trile.subtractCoins(price).push();
+                        Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price)));
+                        return true;
+                    }
+                }
+
+                trile.addAbility(a);
+                trile.subtractCoins(price).push();
+
+                Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price)));
+
                 return true;
             case "home":
                 Tribe tribee = TribeLoader.getTribe((Player)sender);

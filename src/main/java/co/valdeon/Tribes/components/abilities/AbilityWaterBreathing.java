@@ -14,11 +14,12 @@ public class AbilityWaterBreathing extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.WATER_BREATHING);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 60 * 60 * 20, multi));
     }
 
 }

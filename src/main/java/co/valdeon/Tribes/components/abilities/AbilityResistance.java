@@ -14,11 +14,12 @@ public class AbilityResistance extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60 * 60 * 20, multi));
     }
 
 }

@@ -14,11 +14,12 @@ public class AbilityNightVision extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.NIGHT_VISION);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 5 * 20, 1));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 60 * 60 * 20, multi));
     }
 
 }

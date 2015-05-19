@@ -14,11 +14,12 @@ public class AbilitySaturation extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.SATURATION);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 60 * 60 * 20, multi));
     }
 
 }

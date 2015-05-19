@@ -16,7 +16,7 @@ public enum AbilityType {
     WATERBREATHING("WATERBREATHING");
 
     String text;
-    int multiplier = 1;
+    int multiplier = 0;
 
     AbilityType(String s) {
         this.text = s;

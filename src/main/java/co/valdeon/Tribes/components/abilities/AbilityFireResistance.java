@@ -18,7 +18,7 @@ public class AbilityFireResistance extends Ability {
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60 * 60 * 20, multi));
     }
 
 }

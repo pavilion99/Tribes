@@ -14,11 +14,12 @@ public class AbilityRegen extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.REGENERATION);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, this.multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60 * 60 * 20, multi));
     }
 
 }

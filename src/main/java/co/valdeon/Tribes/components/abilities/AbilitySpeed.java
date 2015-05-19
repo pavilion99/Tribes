@@ -14,11 +14,12 @@ public class AbilitySpeed extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.SPEED);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, this.multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60 * 60 * 20, multi));
     }
 
 }

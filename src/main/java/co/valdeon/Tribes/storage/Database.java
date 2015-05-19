@@ -267,12 +267,14 @@ public class Database {
             return abilities;
         String streng[] = s.split(";");
         for(String strang : streng) {
-            String[] strung = strang.split(":");
-            AbilityType type = AbilityType.getAbilityTypeFromString(strung[0]);
-            int multiplier = Integer.parseInt(strung[1]);
-            if(type != null) {
-                type.setMultiplier(multiplier);
-                abilities.add(type);
+            if(!strang.equals("")) {
+                String[] strung = strang.split(":");
+                AbilityType type = AbilityType.getAbilityTypeFromString(strung[0]);
+                int multiplier = Integer.parseInt(strung[1]);
+                if (type != null) {
+                    type.setMultiplier(multiplier);
+                    abilities.add(type);
+                }
             }
         }
         return abilities;

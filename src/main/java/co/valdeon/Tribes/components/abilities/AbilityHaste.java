@@ -14,11 +14,12 @@ public class AbilityHaste extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.FAST_DIGGING);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 60 * 60 * 20, multi));
     }
 
 }

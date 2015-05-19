@@ -13,6 +13,9 @@ tierThreeChunks: 75
 tierFourChunks: 100
 tierFiveChunks: 125
 
+# Tribe save frequency, in minutes
+saveFrequency: 5
+
 # The price of one tribe coin
 coinPrice: 1250
 
@@ -84,6 +87,10 @@ kickedKickee: '{0}You have successfully kicked {1}{3}{0} from {1}{2}{0}.'
 # {2}: page number; {3}: total pages
 listTribes: '{0}Tribes list: ({1}{2}{0}/{1}{3}{0})'
 
+# Sent when someone asks for the member list of their tribe
+# {2}: page number; {3}: total pages
+listMembers: '{0}Members list: ({1}{2}{0}/{1}{3}{0})'
+
 # Sent when a player teleports to their tribe home.
 teleportHome: '{0}You have been teleported to your tribe home.'
 
@@ -102,6 +109,18 @@ buyCoins: '{0}You bought {1}{2}{0} coins for ${1}{5}{0} (total: {1}{6}{0}).  Tot
 # Sent when a player leaves his or her tribe
 # {2}: the tribe name
 leave: '{0}You have successfully left {1}{2}{0}.'
+
+# Sent to a player who promotes another player
+# {2}: the player's new rank; {3}: the tribe name; {4}: the person being promoted
+promoter: '{0}Promoted {1}{4}{0} to {1}{2}{0} in {1}{3}{0}.'
+
+# Sent to a player who is promoted
+# {2}: the player's new rank; {3}: the tribe name; {4}: the person doing the promoting
+promoter: '{0}You were promoted to {1}{2}{0} in {1}{3}{0} by {1}{4}{0}.'
+
+# Sent to a player who buys an ability for his or her tribe
+# {2}: ability name; {3}: ability multiplier; {4}: price
+buyAbility: '{0}You upgraded {1}{2}{0} to level {1}{3}{0} for a cost of {1}${4}{0}.'
 
 # ------ Error Messages ------ #
 
@@ -168,4 +187,47 @@ lowBalance: 'You need ${2} to do this.  You have ${4}.  You need ${3}.'
 transactionError: 'Sorry, something went wrong. Please try again later.'
 
 # Sent when the chief tries to leave his tribe.
-chiefLeave: "The chief cannot leave his tribe."
+chiefLeave: 'The chief cannot leave his tribe.'
+
+# Sent when a player tries to promote someone to chief
+oneChief: 'There can be only one chief in a tribe.  Use /t setchief.'
+
+
+# ------ Prices ------ #
+# All price are in coins
+
+# FIRERESISTANCE
+fireResistance: 2
+
+# HASTE
+haste: 2
+
+# HEALTHBOOST
+healthBoost: 2
+
+# INVISIBILITY
+invisibility: 2
+
+# JUMP
+jump: 2
+
+# NIGHTVISION
+nightVision: 2
+
+# REGEN
+regen: 2
+
+# RESISTANCE
+resistance: 2
+
+# SATURATION
+saturation: 2
+
+# SPEED
+speed: 2
+
+# STRENGTH
+strength: 2
+
+# WATERBREATHING
+waterBreathing: 2

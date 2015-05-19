@@ -14,11 +14,12 @@ public class AbilityJump extends Ability {
     @Override
     public void run() {
         if(!chunkOwned()) {
+            this.p.removePotionEffect(PotionEffectType.JUMP);
             this.cancel();
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 5 * 20, this.multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 60 * 60 * 20, multi));
     }
 
 }
