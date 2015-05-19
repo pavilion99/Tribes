@@ -19,6 +19,8 @@ public class Config {
 
     public static int coinPrice;
 
+    public static int saveFrequency;
+
     public static String colorOne;
     public static String colorTwo;
     public static String errorColor;
@@ -63,6 +65,10 @@ public class Config {
     public static String buyCoins;
     public static String chiefLeave;
     public static String leave;
+    public static String listMembers;
+    public static String promoter;
+    public static String promotee;
+    public static String oneChief;
 
     public static boolean chatFeatures;
 
@@ -121,6 +127,11 @@ public class Config {
         buyCoins = (String)get(String.class, "buyCoins");
         chiefLeave = (String)get(String.class, "chiefLeave");
         leave = (String)get(String.class, "leave");
+        listMembers = (String)get(String.class, "listMembers");
+        promoter = (String)get(String.class, "promoter");
+        promotee = (String)get(String.class, "promotee");
+        oneChief = (String)get(String.class, "oneChief");
+        saveFrequency = (int)get(int.class, "saveFrequency");
     }
 
     public Object get(Class c, String path) {

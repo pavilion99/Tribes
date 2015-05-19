@@ -5,6 +5,7 @@ import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.events.TribeEarnCoinsEvent;
 import co.valdeon.Tribes.hooks.VaultHook;
 import co.valdeon.Tribes.listeners.*;
+import co.valdeon.Tribes.schedules.PushTribesSchedule;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.CommandLoader;
@@ -18,12 +19,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Tribes extends JavaPlugin {
@@ -31,6 +35,7 @@ public class Tribes extends JavaPlugin {
     private static Database db;
     private static File dDir;
     private static Economy econ;
+    private static List<BukkitTask> tasks = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -50,8 +55,16 @@ public class Tribes extends JavaPlugin {
 
         registerCommands();
         registerListeners();
+        loadSchedules();
 
         load();
+    }
+
+    @Override
+    public void onDisable() {
+        for(Tribe t : TribeLoader.tribesList) {
+            t.push();
+        }
     }
 
     public void registerListeners() {
@@ -73,6 +86,11 @@ public class Tribes extends JavaPlugin {
         for(PluginCommand c : CommandLoader.cmds) {
             c.setExecutor(new TribesCmd(this));
         }
+    }
+
+    public void loadSchedules() {
+        tasks.add(new PushTribesSchedule().runTaskTimerAsynchronously(this, 0, Config.saveFrequency * 60 * 20));
+        getLogger().info("Saving to database automatically every " + Config.saveFrequency + " minutes.");
     }
 
     public void load() {

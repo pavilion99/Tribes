@@ -21,8 +21,6 @@ public class Tribe {
     private HashMap<OfflinePlayer, TribeRank> members = new HashMap<>();
     private List<Chunk> ownedChunks = new ArrayList<>();
     private int coins;
-    private OfflinePlayer chief = null;
-    private List<OfflinePlayer> officers = new ArrayList<>();
     private List<OfflinePlayer> invitees = new ArrayList<>();
     private List<AbilityType> abilities = new ArrayList<>();
     private Location home;
@@ -41,13 +39,6 @@ public class Tribe {
         this.ownedChunks = ownedChunks;
         this.id = id;
         this.coins = coins;
-        for(OfflinePlayer p : members.keySet()) {
-            if(members.get(p) == TribeRank.CHIEF) {
-                this.chief = p;
-            }else if(members.get(p) == TribeRank.OFFICER) {
-                this.officers.add(p);
-            }
-        }
         this.invitees = invitees;
         this.abilities = abilities;
         this.home = home;
@@ -132,18 +123,6 @@ public class Tribe {
         this.coins = a;
     }
 
-    public List<OfflinePlayer> getOfficers() {
-        return this.officers;
-    }
-
-    public boolean isOfficer(OfflinePlayer p) {
-        return this.officers.contains(p);
-    }
-
-    public OfflinePlayer getChief() {
-        return this.chief;
-    }
-
     public TribeRank getRank(OfflinePlayer p) {
         return this.getMembers().get(p);
     }
@@ -207,8 +186,11 @@ public class Tribe {
         String fin = "";
         AbilityType[] abilitys = this.abilities.toArray(new AbilityType[1]);
         for(int i = 0; i < abilitys.length; i++) {
-            if(abilitys[i] != null)
+            if(abilitys[i] != null) {
                 fin += abilitys[i].getText();
+                fin += ":";
+                fin += Integer.toString(abilitys[i].getMultiplier());
+            }
             if((i + 1) < abilitys.length)
                 fin += ";";
         }
@@ -246,6 +228,10 @@ public class Tribe {
     public Tribe setHome(Location l) {
         this.home = l;
         return this;
+    }
+
+    public void setRank(OfflinePlayer p, TribeRank t) {
+        this.members.put(p, t);
     }
 
 }

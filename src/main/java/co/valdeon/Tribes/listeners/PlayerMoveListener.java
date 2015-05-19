@@ -3,7 +3,7 @@ package co.valdeon.Tribes.listeners;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.AbilityType;
 import co.valdeon.Tribes.components.Tribe;
-import co.valdeon.Tribes.components.abilities.AbilitySpeed;
+import co.valdeon.Tribes.components.abilities.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
@@ -34,7 +34,40 @@ public class PlayerMoveListener implements Listener {
             for(AbilityType g : a) {
                 switch(g.getText()) {
                     case "SPEED":
-                        new AbilitySpeed(e.getPlayer()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilitySpeed(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "JUMP":
+                        new AbilityJump(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "REGEN":
+                        new AbilityRegen(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "FIRERESISTANCE":
+                        new AbilityFireResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "HASTE":
+                        new AbilityHaste(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "HEALTHBOOST":
+                        new AbilityHealthBoost(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "INVISIBILITY":
+                        new AbilityInvisibility(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "NIGHTVISION":
+                        new AbilityNightVision(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "RESISTANCE":
+                        new AbilityResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "SATURATION":
+                        new AbilitySaturation(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "STRENGTH":
+                        new AbilityStrength(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        break;
+                    case "WATERBREATHING":
+                        new AbilityWaterBreathing(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
                         break;
                     default:
                         break;

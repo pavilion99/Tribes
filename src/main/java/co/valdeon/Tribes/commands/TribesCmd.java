@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -277,7 +278,7 @@ public class TribesCmd extends TribeCommand {
                     if (ta != null) {
                         Message.message(sender, Config.header);
                         Message.message(sender, Config.colorOne + "Name: " + Config.colorTwo + ta.getName());
-                        Message.message(sender, Config.colorOne + "Claimed land: " + Config.colorTwo + ta.getChunks().size() + "&9 chunks");
+                        Message.message(sender, Config.colorOne + "Claimed land: " + Config.colorTwo + ta.getChunks().size() + Config.colorOne + " chunks");
                         Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().name());
                         Message.message(sender, Config.colorOne + "Members: " + Config.colorTwo + ta.getMembers().size());
                         Message.message(sender, Config.colorOne + "Coins: " + Config.colorTwo + ta.getCoins());
@@ -445,8 +446,8 @@ public class TribesCmd extends TribeCommand {
                 }
 
                 ((Player)sender).teleport(tribee.getHome());
-
                 Message.message(sender, Message.format(Config.teleportHome, Config.colorOne, Config.colorTwo));
+
                 return true;
             case "sethome":
                 Tribe triber = TribeLoader.getTribe((Player)sender);
@@ -524,6 +525,93 @@ public class TribesCmd extends TribeCommand {
                 Message.message(sender, Message.format(Config.leave, Config.colorOne, Config.colorTwo, tribel.getName()));
 
                 return true;
+            case "members":
+                Tribe tribek = TribeLoader.getTribe((Player) sender);
+
+                if (tribek == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(args.length == 1) {
+                    displayMembers(sender, tribek, 1);
+                } else if(args.length == 2) {
+                    try {
+                        int ia = Integer.parseInt(args[1]);
+                        displayMembers(sender, tribek, ia);
+                    } catch(Exception e) {
+                        displayMembers(sender, tribek, 1);
+                    }
+                } else {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t members [page]");
+                }
+                return true;
+            case "promote":
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t promote <user>");
+                }
+
+                Tribe tribey = TribeLoader.getTribe((Player)sender);
+
+                if(tribey == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(!tribey.getMembers().keySet().contains(Bukkit.getOfflinePlayer(args[1]))) {
+                    Message.message(sender, err(), Config.playerNotInTribe);
+                    return true;
+                }
+
+                OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
+
+                if(tribey.getRank((Player)sender).getPower() <= tribey.getRank(p).getPower()) {
+                    Message.message(sender, err(), Config.needMorePower);
+                    return true;
+                }
+
+                int power = tribey.getRank(p).getPower();
+                TribeRank newRank = TribeRank.getRankFromPower(power + 1);
+
+                if(newRank == TribeRank.CHIEF) {
+
+                }
+
+                tribey.setRank(p, newRank);
+
+                Database.setRank(p, newRank);
+
+                if(p.isOnline()) {
+                    Message.message(p.getPlayer(), Message.format(Config.promotee, Config.colorOne, Config.colorTwo, newRank.getName(), tribey.getName(), sender.getName()));
+                }
+
+                Message.message(sender, Message.format(Config.promoter, Config.colorOne, Config.colorTwo, newRank.getName(), tribey.getName(), p.getName()));
+
+                return true;
+            case "setchief":
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t setchief <user>");
+                    return true;
+                }
+
+                Tribe tribew = TribeLoader.getTribe((Player)sender);
+
+                if(tribew == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                TribeRank senderRank = tribew.getRank((Player)sender);
+
+                if(senderRank != TribeRank.CHIEF) {
+                    Message.message(sender, err(), Config.notChief);
+                    return true;
+                }
+
+
             default:
                 Message.messageInvalidArgs(sender, this.getClass());
                 return true;
@@ -533,6 +621,49 @@ public class TribesCmd extends TribeCommand {
 
     private static String err() {
         return "&" + Config.errorColor;
+    }
+
+    private void displayMembers(CommandSender sender, Tribe t, int page) {
+        List<OfflinePlayer> chiefs = new ArrayList<>();
+        List<OfflinePlayer> officers = new ArrayList<>();
+        List<OfflinePlayer> members = new ArrayList<>();
+
+        List<OfflinePlayer> all = new ArrayList<>();
+
+        for(OfflinePlayer p : t.getMembers().keySet()) {
+            switch(t.getMembers().get(p).getName()) {
+                case "CHIEF":
+                    chiefs.add(p);
+                    break;
+                case "OFFICER":
+                    officers.add(p);
+                    break;
+                case "MEMBER":
+                    members.add(p);
+                    break;
+                default:
+                    members.add(p);
+            }
+        }
+
+        all.addAll(chiefs);
+        all.addAll(officers);
+        all.addAll(members);
+
+        int totalSize = all.size();
+
+        int totalPages = (int)Math.ceil(totalSize/6.0d);
+
+        if(page > totalPages)
+            page = 1;
+
+        Message.message(sender, Message.format(Config.listMembers, Config.colorOne, Config.colorTwo, Integer.toString(page), Integer.toString(totalPages)));
+        for(int i = 6 * (page - 1); i < 6 * page; i++) {
+            if(i >= totalSize)
+                break;
+
+            Message.message(sender, Config.colorTwo, all.get(i).getName(), Config.colorOne, ", ", Config.colorTwo, t.getRank(all.get(i)).getName());
+        }
     }
 
 }

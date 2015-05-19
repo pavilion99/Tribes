@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class AbilitySpeed extends Ability {
+public class AbilityStrength extends Ability {
 
-    public AbilitySpeed(Player p, int i) {
+    public AbilityStrength(Player p, int i) {
         super(p, i);
     }
 
@@ -18,7 +18,7 @@ public class AbilitySpeed extends Ability {
             return;
         }
 
-        this.p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, this.multi));
+        this.p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 5 * 20, multi));
     }
 
 }

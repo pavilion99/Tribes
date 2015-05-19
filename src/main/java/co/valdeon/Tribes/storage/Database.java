@@ -267,8 +267,11 @@ public class Database {
             return abilities;
         String streng[] = s.split(";");
         for(String strang : streng) {
-            AbilityType type = AbilityType.getAbilityTypeFromString(strang);
+            String[] strung = strang.split(":");
+            AbilityType type = AbilityType.getAbilityTypeFromString(strung[0]);
+            int multiplier = Integer.parseInt(strung[1]);
             if(type != null) {
+                type.setMultiplier(multiplier);
                 abilities.add(type);
             }
         }
@@ -289,6 +292,12 @@ public class Database {
         float pitch = Float.parseFloat(locationParts[4]);
 
         return new Location(Bukkit.getWorld(Config.world), x, y, z, yaw, pitch);
+    }
+
+    public static void setRank(OfflinePlayer p, TribeRank t) {
+        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("role", "'" + t.getName() + "'")).where("uuid", WhereType.EQUALS, "'" + p.getUniqueId() + "'");
+        q.query();
+        q.close();
     }
 
 }
