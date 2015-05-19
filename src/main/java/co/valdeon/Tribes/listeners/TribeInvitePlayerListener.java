@@ -12,7 +12,7 @@ public class TribeInvitePlayerListener implements Listener {
     public void onEvent(TribeInvitePlayerEvent e) {
         if(!e.isCancelled())
             if(e.getInvitee().isOnline())
-                Message.message(e.getInvitee().getPlayer(), Config.invite, Config.colorOne, Config.colorTwo, e.getInviter().getName(), e.getTribe().getName());
+                Message.message(e.getInvitee().getPlayer(), Message.format(Config.invite, Config.colorOne, Config.colorTwo, e.getInviter().getName(), e.getTribe().getName()));
     }
 
 }

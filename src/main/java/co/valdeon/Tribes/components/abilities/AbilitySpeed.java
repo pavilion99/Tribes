@@ -23,7 +23,7 @@ public class AbilitySpeed extends Ability {
         }
 
         if(TribeLoader.getTribe(p).equals(t))
-            this.p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30 * 1000, 1));
+            this.p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 1));
     }
 
     public AbilitySpeed(Player p) {

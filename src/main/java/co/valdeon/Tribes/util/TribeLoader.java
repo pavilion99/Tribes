@@ -4,6 +4,7 @@ import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.*;
 import co.valdeon.Tribes.storage.Database;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
 import java.util.ArrayList;
@@ -31,8 +32,9 @@ public abstract class TribeLoader {
             ArrayList<OfflinePlayer> invitees = (ArrayList<OfflinePlayer>)data.get("invitees");
             TribeTier tier = (TribeTier)data.get("tier");
             List<AbilityType> abilities = (ArrayList<AbilityType>)data.get("abilities");
+            Location home = (Location)data.get("home");
 
-            Tribe t = new Tribe(name, id, members, chunks, coins, invitees, tier, abilities);
+            Tribe t = new Tribe(name, id, members, chunks, coins, invitees, tier, abilities, home);
 
             tribesList.add(t);
             ownedChunks.put(t, chunks);
@@ -87,4 +89,20 @@ public abstract class TribeLoader {
         return null;
     }
 
+    public static int getAllowedChunks(Tribe t) {
+        switch(t.getTier().getValue()) {
+            case 1:
+                return Config.tierOneChunks;
+            case 2:
+                return Config.tierTwoChunks;
+            case 3:
+                return Config.tierThreeChunks;
+            case 4:
+                return Config.tierFourChunks;
+            case 5:
+                return Config.tierFiveChunks;
+            default:
+                return Config.tierOneChunks;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package co.valdeon.Tribes.commands;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
+import co.valdeon.Tribes.components.TribeTier;
 import co.valdeon.Tribes.events.TribeInvitePlayerEvent;
 import co.valdeon.Tribes.events.TribeKickPlayerEvent;
 import co.valdeon.Tribes.storage.*;
@@ -25,16 +26,32 @@ import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave"};
 
-    public boolean execute(CommandSender s, String[] args) {
+    public TribesCmd(Tribes t) {
+        super(t);
+    }
+
+    public boolean execute(CommandSender s, String[] args, Tribes tribes) {
+        this.tribes = tribes;
+
         if(s instanceof ConsoleCommandSender) {
             Message.message(s, Config.consoleExecutionFailure);
             return false;
         }
 
-        if(args.length == 0) {
-            echoInfo(s);
+        if(args.length == 0 || args[0].equals("help")) {
+            if(args.length == 2) {
+                try {
+                    int i = Integer.parseInt(args[1]);
+                    echoInfo(s, i);
+                    return true;
+                } catch(Exception e) {
+                    echoInfo(s, 1);
+                    return true;
+                }
+            }
+            echoInfo(s, 1);
             return true;
         }
 
@@ -47,15 +64,49 @@ public class TribesCmd extends TribeCommand {
         return false;
     }
 
-    private void echoInfo(CommandSender s) {
-        Message.message(s, "#-----------------Tribes-----------------#");
-        Message.message(s, "/t - Main command for tribes.");
-        Message.message(s, "/t create - Create a tribe.");
-        Message.message(s, "/t invite - Invite someone to your tribe.");
-        Message.message(s, "/t kick - Remove someone from your tribe.");
-        Message.message(s, "/t destroy - Eliminate your tribe.");
-        Message.message(s, "/t coins - Tribe currency information.");
-        Message.message(s, "#----------------------------------------#");
+    private void echoInfo(CommandSender s, int page) {
+        switch(page) {
+            case 1:
+                Message.message(s, Config.header);
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "1");
+                Message.message(s, Config.colorOne, "/t &f-" + Config.colorTwo + " Main command for tribes.");
+                Message.message(s, Config.colorOne, "/t create &f-" + Config.colorTwo + " Create a tribe.");
+                Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
+                Message.message(s, Config.colorOne, "/t kick &f-" + Config.colorTwo + " Remove someone from your tribe.");
+                Message.message(s, Config.colorOne, "/t destroy &f-" + Config.colorTwo + " Eliminate your tribe.");
+                Message.message(s, Config.colorOne, "/t coins &f-" + Config.colorTwo + " Tribe currency information.");
+                Message.message(s, Config.footer);
+                break;
+            case 2:
+                Message.message(s, Config.header);
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "2");
+                Message.message(s, Config.colorOne, "/t join &f-" + Config.colorTwo + " Join a tribe.");
+                Message.message(s, Config.colorOne, "/t info &f-" + Config.colorTwo + " View info about a tribe.");
+                Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
+                Message.message(s, Config.colorOne, "/t claim &f-" + Config.colorTwo + " Claim land for your tribe.");
+                Message.message(s, Config.colorOne, "/t list &f-" + Config.colorTwo + " Show a list of tribes.");
+                Message.message(s, Config.colorOne, "/t reload &f-" + Config.colorTwo + " Reload configuration.");
+                Message.message(s, Config.footer);
+                break;
+            case 3:
+                Message.message(s, Config.header);
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "3");
+                Message.message(s, Config.colorOne, "/t leave &f-" + Config.colorTwo + " Leave a tribe.");
+                Message.message(s, Config.colorOne, "/t help &f-" + Config.colorTwo + " Show this information.");
+                Message.message(s, Config.footer);
+                break;
+            default:
+                Message.message(s, Config.header);
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "1");
+                Message.message(s, Config.colorOne, "/t &f-" + Config.colorTwo + " Main command for tribes.");
+                Message.message(s, Config.colorOne, "/t create &f-" + Config.colorTwo + " Create a tribe.");
+                Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
+                Message.message(s, Config.colorOne, "/t kick &f-" + Config.colorTwo + " Remove someone from your tribe.");
+                Message.message(s, Config.colorOne, "/t destroy &f-" + Config.colorTwo + " Eliminate your tribe.");
+                Message.message(s, Config.colorOne, "/t coins &f-" + Config.colorTwo + " Tribe currency information.");
+                Message.message(s, Config.footer);
+                break;
+        }
     }
 
     private boolean run(CommandSender sender, String s, String[] args) {
@@ -78,7 +129,7 @@ public class TribesCmd extends TribeCommand {
                 }
 
 
-                Tribe g = new Tribe(args[1], (Player) sender).push();
+                Tribe g = new Tribe(args[1], (Player) sender).push(true);
                 TribeLoader.tribesList.add(g);
 
                 Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
@@ -98,7 +149,7 @@ public class TribesCmd extends TribeCommand {
                 }
 
                 if (TribeLoader.getTribe((Player) sender) == null) {
-                    Message.message(sender, "&cYou must be in a tribe before you can invite someone else.");
+                    Message.message(sender, err(), Config.notInTribe);
                     return true;
                 }
 
@@ -224,12 +275,14 @@ public class TribesCmd extends TribeCommand {
                     Tribe ta = TribeLoader.getTribe((Player) sender);
 
                     if (ta != null) {
-                        Message.message(sender, "&9Tribe Information");
-                        Message.message(sender, "&9Name: &e" + ta.getName());
-                        Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
-                        Message.message(sender, "&9Tribe tier: &e" + ta.getTier().name());
-                        Message.message(sender, "&9Members: &e" + ta.getMembers().size());
-                        Message.message(sender, "&9Coins: &e" + ta.getCoins());
+                        Message.message(sender, Config.header);
+                        Message.message(sender, Config.colorOne + "Name: " + Config.colorTwo + ta.getName());
+                        Message.message(sender, Config.colorOne + "Claimed land: " + Config.colorTwo + ta.getChunks().size() + "&9 chunks");
+                        Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().name());
+                        Message.message(sender, Config.colorOne + "Members: " + Config.colorTwo + ta.getMembers().size());
+                        Message.message(sender, Config.colorOne + "Coins: " + Config.colorTwo + ta.getCoins());
+                        Message.message(sender, Config.colorOne + "Abilities: " + Config.colorTwo + ta.getAbilityString());
+                        Message.message(sender, Config.footer);
                     } else {
                         Message.message(sender, "&cYou are not currently in a tribe.");
                     }
@@ -253,8 +306,9 @@ public class TribesCmd extends TribeCommand {
                 }
                 break;
             case "claim":
-                if (args.length != 2) {
+                if (args.length != 1) {
                     Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t claim");
                     return true;
                 }
 
@@ -285,24 +339,189 @@ public class TribesCmd extends TribeCommand {
                     }
                 }
 
+                if(th.getChunks().size() >= TribeLoader.getAllowedChunks(th)) {
+                    Message.message(sender, err(), Config.noMoreLand);
+                    return true;
+                }
+
                 th.addChunk(x).push();
 
                 break;
-            case "help":
-                echoInfo(sender);
-                return true;
             case "list":
-                String list = "{1}";
-
-                int i = 0;
-                while(i < TribeLoader.tribesList.size()) {
-                    list += TribeLoader.tribesList.get(i);
-                    if(!((i + 1) >= TribeLoader.tribesList.size()))
-                        list += "{0}, {1}";
-                    i++;
+                int page;
+                if(args.length == 1)
+                    page = 1;
+                else {
+                    if(args[1] == "0") {
+                        Message.message(sender, err(), Config.nonZero);
+                        return true;
+                    }
+                    page = Integer.parseInt(args[1]);
                 }
 
-                Message.message(sender, Message.format(list, Config.colorOne, Config.colorTwo));
+                int totalPages = (int)Math.ceil(TribeLoader.tribesList.size()/6.0d);
+
+                if(page > totalPages) {
+                    Message.message(sender, err(), Config.tooManyPages);
+                    return true;
+                }
+
+                Message.message(sender, Message.format(Config.listTribes, Config.colorOne, Config.colorTwo, Integer.toString(page), Integer.toString(totalPages)));
+
+                for(int i = (6 * (page - 1)); i < (6 * page); i++) {
+                    if(i >= TribeLoader.tribesList.size())
+                        break;
+                    Message.message(sender, Config.colorOne, TribeLoader.tribesList.get(i).getName(), Config.colorTwo);
+                }
+
+                return true;
+            case "reload":
+                tribes.reloadCfg();
+                Message.message(sender, Config.colorOne, "Tribes reloaded.");
+                return true;
+            case "upgrade":
+                Tribe playerTribe = TribeLoader.getTribe((Player)sender);
+
+                if(playerTribe == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                int coins = playerTribe.getCoins();
+                TribeTier tier = playerTribe.getTier();
+
+                switch(tier.getValue()) {
+                    case 1:
+                        if(coins < 2) {
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(2), Integer.toString(2 - coins), Integer.toString(coins)));
+                            return true;
+                        }
+
+                        playerTribe.subtractCoins(2).push();
+                        playerTribe.setTier(TribeTier.TIER_TWO).push();
+                        break;
+                    case 2:
+                        if(coins < 4) {
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(4), Integer.toString(4 - coins), Integer.toString(coins)));
+                            return true;
+                        }
+
+                        playerTribe.subtractCoins(4).push();
+                        playerTribe.setTier(TribeTier.TIER_THREE).push();
+                        break;
+                    case 3:
+                        if(coins < 6) {
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(6), Integer.toString(6 - coins), Integer.toString(coins)));
+                            return true;
+                        }
+
+                        playerTribe.subtractCoins(6).push();
+                        playerTribe.setTier(TribeTier.TIER_FOUR).push();
+                        break;
+                    case 4:
+                        if(coins < 8) {
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(8), Integer.toString(8 - coins), Integer.toString(coins)));
+                            return true;
+                        }
+
+                        playerTribe.subtractCoins(8).push();
+                        playerTribe.setTier(TribeTier.TIER_FIVE).push();
+                        break;
+                    case 5:
+                        Message.message(sender, err(), Config.fullyUpgraded);
+                        break;
+                }
+                return true;
+            case "home":
+                Tribe tribee = TribeLoader.getTribe((Player)sender);
+
+                if(tribee == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(tribee.getHome() == null) {
+
+                }
+
+                ((Player)sender).teleport(tribee.getHome());
+
+                Message.message(sender, Message.format(Config.teleportHome, Config.colorOne, Config.colorTwo));
+                return true;
+            case "sethome":
+                Tribe triber = TribeLoader.getTribe((Player)sender);
+
+                if(triber == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(triber.getMembers().get(sender).getPower() <= 2) {
+                    Message.message(sender, err(), Config.needMorePower);
+                    return true;
+                }
+
+                triber.setHome(((Player)sender).getLocation());
+                Message.message(sender, Message.format(Config.setHome, Config.colorOne, Config.colorTwo, triber.getName()));
+                return true;
+            case "getcoins":
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t getcoins <amount>");
+                    return true;
+                }
+
+                int i;
+                try {
+                    i = Integer.parseInt(args[1]);
+                } catch(Exception e) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t getcoins <amount>");
+                    return true;
+                }
+
+                if(i < 1) {
+                    Message.message(sender, err(), Config.oneRequired);
+                    return true;
+                }
+
+                Tribe tribeh = TribeLoader.getTribe((Player)sender);
+
+                if(tribeh == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(!Tribes.getEcon().has((Player)sender, Config.coinPrice * i)) {
+                    Message.message(sender, err(), Message.format(Config.lowBalance, Config.colorOne, Config.colorTwo, Integer.toString(Config.coinPrice * i), Double.toString(((Config.coinPrice * i) - Tribes.getEcon().getBalance((Player) sender))), Double.toString(Tribes.getEcon().getBalance((Player) sender))));
+                    return true;
+                }
+
+                if(!Tribes.getEcon().withdrawPlayer((Player)sender, Config.coinPrice * i).transactionSuccess()) {
+                    Message.message(sender, err(), Config.transactionError);
+                    return true;
+                } else {
+                    tribeh.addCoins(i).push();
+                    Message.message(sender, Message.format(Config.buyCoins, Config.colorOne, Config.colorTwo, Integer.toString(i), Integer.toString(Config.coinPrice * i), Double.toString(Tribes.getEcon().getBalance((Player)sender)), tribeh.getName(), Integer.toString(tribeh.getCoins())));
+                    return true;
+                }
+            case "leave":
+                Tribe tribel = TribeLoader.getTribe((Player)sender);
+
+                if(tribel == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+                if(tribel.getRank((Player)sender).getName().equals("CHIEF")) {
+                    Message.message(sender, err(), Config.chiefLeave);
+                    return true;
+                }
+
+                tribel.removeMember((Player)sender);
+                Database.setPlayerMemberOfNoTribe((Player) sender);
+
+                Message.message(sender, Message.format(Config.leave, Config.colorOne, Config.colorTwo, tribel.getName()));
 
                 return true;
             default:

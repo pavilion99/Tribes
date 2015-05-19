@@ -16,7 +16,7 @@ public enum AbilityType {
 
     public static AbilityType getAbilityTypeFromString(String s) {
         switch(s) {
-            case "speed":
+            case "SPEED":
                 return SPEED;
             default:
                 return null;

@@ -34,7 +34,7 @@ public class PlayerMoveListener implements Listener {
             for(AbilityType g : a) {
                 switch(g.getText()) {
                     case "SPEED":
-                        new AbilitySpeed(e.getPlayer()).runTaskTimer(this.tribes, 0, 30 * 1000);
+                        new AbilitySpeed(e.getPlayer()).runTaskTimer(this.tribes, 0, 20);
                         break;
                     default:
                         break;

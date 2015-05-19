@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Tribes">
-    <output-path>$USER_HOME$/Desktop</output-path>
+    <output-path>D:/Users/Spencer Colton/Documents/Minecraft Servers/ScortexMC Test/plugins</output-path>
     <root id="archive" name="Tribes.jar">
       <element id="module-output" name="Tribes" />
     </root>

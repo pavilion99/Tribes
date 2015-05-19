@@ -9,6 +9,7 @@ import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -60,6 +61,7 @@ public class Database {
                 HashMap<OfflinePlayer, TribeRank> members = getTribeMembers(id);
                 TribeTier tier = TribeTier.getTier(r.getString("tier"));
                 List<AbilityType> abilities = getAbilitiesFromString(r.getString("abilities"));
+                Location home = getHomeFromString(r.getString("home"));
 
                 HashMap<String, Object> internal = new HashMap<>();
 
@@ -71,6 +73,7 @@ public class Database {
                 internal.put("members", members);
                 internal.put("tier", tier);
                 internal.put("abilities", abilities);
+                internal.put("home", home);
 
                 tribes.put(name, internal);
             }
@@ -89,6 +92,8 @@ public class Database {
 
     private static List<Chunk> getChunksFromString(String s) {
         List<Chunk> chunks = new ArrayList<>();
+        if(s == null)
+            return chunks;
         String[] chenks = s.split(";");
         for(String ss : chenks) {
             String[] chonks = ss.split(",");
@@ -99,7 +104,7 @@ public class Database {
 
     private static List<OfflinePlayer> getInviteesFromString(String s) {
         List<OfflinePlayer> invitees = new ArrayList<>();
-        if(!s.equals("")) {
+        if(s != null && !s.equals("")) {
             String[] initaas = s.split(";");
             for (String ss : initaas) {
                 if(!ss.equals("")) {
@@ -144,17 +149,23 @@ public class Database {
         String chunks = t.getChunkString();
         String tier = t.getTier().tierString;
         String abilities = t.getAbilityString();
+        String home = t.getHomeString();
 
         if(id == 0) {
-            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks", "tier", "abilities").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'", "'" + tier + "'", "'" + abilities, "'");
+            Query q = new Query(QueryType.INSERTINTO, "`tribes`").columns("name", "coins", "invitees", "chunks", "tier", "abilities", "home").values("'" + name + "'", Integer.toString(coins), "'" + invitees + "'", "'" + chunks + "'", "'" + tier + "'", "'" + abilities, "'", "'" + home + "'");
             ResultSet r = q.query(true);
 
             try {
                 if(r.next()) {
-                    return r.getInt(1);
+                    int changed = r.getInt(1);
+                    q.close();
+                    r.close();
+                    return changed;
                 } else {
                     // Shouldn't happen
-                    return r.getInt(0);
+                    q.close();
+                    r.close();
+                    return 0;
                 }
             } catch(SQLException e) {
                 Tribes.log(Level.SEVERE, "Failed to push tribe " + name + " to the database.");
@@ -162,7 +173,8 @@ public class Database {
                 return 0;
             }
         } else {
-            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins)), new Set("tier", "'" + tier + "'"), new Set("abilities", "'" + abilities + "'")).where("id", WhereType.EQUALS, Integer.toString(id)).limit(1);
+            Query q = new Query(QueryType.UPDATE, "`tribes`").set(new Set("chunks", "'" + chunks + "'"), new Set("invitees", "'" + invitees + "'"), new Set("name", "'" + name + "'"), new Set("coins", Integer.toString(coins)), new Set("tier", "'" + tier + "'"), new Set("abilities", "'" + abilities + "'"), new Set("home", "'" + home + "'")).where("id", WhereType.EQUALS, Integer.toString(id));
+            q.query();
             q.close();
             return 0;
         }
@@ -191,6 +203,8 @@ public class Database {
                     new Query(QueryType.UPDATE, "`users`").set(new Set("name", "'" + playerName + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'").query(true).close();
 
                 Tribe t = TribeLoader.getTribeFromId(tribeId);
+                if(t != null)
+                    t.addMember(p);
 
                 Tribes.Players.put(p, "tribe", t);
                 Tribes.Players.put(p, "tribeRank", role);
@@ -235,8 +249,22 @@ public class Database {
         Tribes.Players.put(p, "tribeRank", r.getName());
     }
 
+    public static void setPlayerMemberOfNoTribe(Player p) {
+        String uuid = p.getUniqueId().toString();
+        int id = 0;
+
+        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "''")).where("uuid", WhereType.EQUALS, "'" + uuid + "'");
+        q.query();
+        q.close();
+
+        Tribes.Players.put(p, "tribe", null);
+        Tribes.Players.put(p, "tribeRank", null);
+    }
+
     private static List<AbilityType> getAbilitiesFromString(String s) {
         List<AbilityType> abilities = new ArrayList<>();
+        if(s == null)
+            return abilities;
         String streng[] = s.split(";");
         for(String strang : streng) {
             AbilityType type = AbilityType.getAbilityTypeFromString(strang);
@@ -245,6 +273,22 @@ public class Database {
             }
         }
         return abilities;
+    }
+
+    private static Location getHomeFromString(String s) {
+        if(s == null || s.equals(""))
+            return null;
+
+        String[] locationParts = s.split(";");
+
+        double x = Double.parseDouble(locationParts[0]);
+        double y = Double.parseDouble(locationParts[1]);
+        double z = Double.parseDouble(locationParts[2]);
+
+        float yaw = Float.parseFloat(locationParts[3]);
+        float pitch = Float.parseFloat(locationParts[4]);
+
+        return new Location(Bukkit.getWorld(Config.world), x, y, z, yaw, pitch);
     }
 
 }

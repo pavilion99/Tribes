@@ -1,16 +1,14 @@
 package co.valdeon.Tribes.components;
 
 import co.valdeon.Tribes.storage.*;
-import co.valdeon.Tribes.util.BiMap;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +25,7 @@ public class Tribe {
     private List<OfflinePlayer> officers = new ArrayList<>();
     private List<OfflinePlayer> invitees = new ArrayList<>();
     private List<AbilityType> abilities = new ArrayList<>();
+    private Location home;
 
     public Tribe(String name, OfflinePlayer creator) {
         this.name = name;
@@ -35,7 +34,7 @@ public class Tribe {
         this.ownedChunks.add(creator.getPlayer().getLocation().getChunk());
     }
 
-    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier, List<AbilityType> abilities) {
+    public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier, List<AbilityType> abilities, Location home) {
         this.name = name;
         this.tier = tier;
         this.members = members;
@@ -51,6 +50,7 @@ public class Tribe {
         }
         this.invitees = invitees;
         this.abilities = abilities;
+        this.home = home;
     }
 
     public int getId() {
@@ -86,12 +86,25 @@ public class Tribe {
         return false;
     }
 
+    public void removeMember(OfflinePlayer p) {
+        this.members.remove(p);
+    }
+
     public static Tribe getTribe(OfflinePlayer p) {
         return TribeLoader.getTribe(p);
     }
 
     public Tribe push() {
-        this.id = Database.pushTribe(this);
+        Database.pushTribe(this);
+        return this;
+    }
+
+    public Tribe push(boolean setId) {
+        if(setId) {
+            this.id = Database.pushTribe(this);
+        } else{
+            Database.pushTribe(this);
+        }
         return this;
     }
 
@@ -110,8 +123,9 @@ public class Tribe {
         return this.coins;
     }
 
-    public void addCoins(int a) {
+    public Tribe addCoins(int a) {
         this.coins += a;
+        return this;
     }
 
     public void setCoins(int a) {
@@ -172,7 +186,7 @@ public class Tribe {
 
     public Tribe addChunk(Chunk t) {
         this.ownedChunks.add(t);
-        TribeLoader.ownedChunks.get(this).add(t);
+        TribeLoader.ownedChunks.put(this, this.ownedChunks);
         return this;
     }
 
@@ -191,14 +205,47 @@ public class Tribe {
 
     public String getAbilityString() {
         String fin = "";
-        int i = 0;
-        while(i < this.abilities.size()) {
-            if(this.abilities.get(i) != null)
-                fin += this.abilities.get(i).getText();
-            if(!((i + 1) >= this.abilities.size()))
+        AbilityType[] abilitys = this.abilities.toArray(new AbilityType[1]);
+        for(int i = 0; i < abilitys.length; i++) {
+            if(abilitys[i] != null)
+                fin += abilitys[i].getText();
+            if((i + 1) < abilitys.length)
                 fin += ";";
         }
         return fin;
+    }
+
+    public Tribe subtractCoins(int i) {
+        this.coins -= i;
+        return this;
+    }
+
+    public Tribe setTier(TribeTier r) {
+        this.tier = r;
+        return this;
+    }
+
+    public Location getHome() {
+        return this.home;
+    }
+
+    public String getHomeString() {
+        if(this.home == null)
+            return "";
+
+        String x = Double.toString(this.home.getX());
+        String y = Double.toString(this.home.getY());
+        String z = Double.toString(this.home.getZ());
+
+        String yaw = Double.toString(this.home.getYaw());
+        String pitch = Double.toString(this.home.getPitch());
+
+        return x + ";" + y + ";" + z + ";" + yaw + ";" + pitch;
+    }
+
+    public Tribe setHome(Location l) {
+        this.home = l;
+        return this;
     }
 
 }

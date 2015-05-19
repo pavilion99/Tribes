@@ -19,6 +19,10 @@ public enum TribeTier {
         this.tierString = tierString;
     }
 
+    public int getValue() {
+        return this.tier;
+    }
+
     public static TribeTier getTier(int i) {
         switch(i) {
             case 1:
@@ -37,6 +41,9 @@ public enum TribeTier {
     }
 
     public static TribeTier getTier(String s) {
+        if(s == null)
+            return null;
+
         switch(s) {
             case "1":
                 return TIER_ONE;

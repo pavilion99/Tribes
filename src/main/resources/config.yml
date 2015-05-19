@@ -13,6 +13,9 @@ tierThreeChunks: 75
 tierFourChunks: 100
 tierFiveChunks: 125
 
+# The price of one tribe coin
+coinPrice: 1250
+
 # What to name the database, or what database to access if one is already created
 db: 'Tribes'
 
@@ -25,6 +28,12 @@ kickPower: 3
 
 # Universal formatting features
 # {0}: colorOne; {1}: colorTwo
+
+# Header
+header: '&6&l&m[=#-----------------------------------#=]'
+
+# Footer
+footer: '&6&l&m[=#-----------------------------------#=]'
 
 # Sent to all members of a tribe when someone earns coins for the tribe.
 # {2}: Player who earned the coins; {3}: the amount of coins; {4}: the name of the tribe
@@ -71,11 +80,33 @@ kicked: '{1}{3}{0} has kicked you from {1}{2}{0}.'
 # {2}: the tribe name; {3}: the kicked player's name
 kickedKickee: '{0}You have successfully kicked {1}{3}{0} from {1}{2}{0}.'
 
+# Sent when someone asks for the tribe list
+# {2}: page number; {3}: total pages
+listTribes: '{0}Tribes list: ({1}{2}{0}/{1}{3}{0})'
+
+# Sent when a player teleports to their tribe home.
+teleportHome: '{0}You have been teleported to your tribe home.'
+
+# Sent when a player sets the tribe home
+# {2}: the tribe name
+setHome: '{0}You have successfully set the tribe home for {1}{2}{0}.'
+
+# Sent when a player upgrades his or her tribe
+# {2}: the tribe tier
+upgrade: '{0}You have successfully upgraded your tribe to tier {1}{2}{0}.'
+
+# Sent when a player buys coins for his or her tribe
+# {2}: the amount of coins bought; {3}: the price; {4} his or her new balance; {5]: his or her tribe name; {6}: new tribe coin balance
+buyCoins: '{0}You bought {1}{2}{0} coins for ${1}{5}{0} (total: {1}{6}{0}).  Total cost: {1}${3}{0}.  New balance: {1}${4}{0}.'
+
+# Sent when a player leaves his or her tribe
+# {2}: the tribe name
+leave: '{0}You have successfully left {1}{2}{0}.'
 
 # ------ Error Messages ------ #
 
 # Sent when a tribe doesn't exist.
-noExist: 'That tribe doesn't exist.'
+noExist: 'That tribe doesn''t exist.'
 
 # Sent when someone tries to join a tribe while being a member of another tribe.
 inExistingTribe: 'You are already a member of {0}, please leave before attempting to join a new tribe.'
@@ -106,3 +137,35 @@ playerNotInTribe: 'That player is not in your tribe.'
 
 # Sent when a player attempts to kick someone of higher rank
 playerHigherRank: 'You may not kick someone of higher rank than you.'
+
+# Sent when a player asks for the tribes on page 0
+nonZero: 'Your page number cannot be 0.'
+
+# Sent when a player asks for a page higher than exists
+tooManyPages: 'That page does not exist.'
+
+# Sent when a player tries to perform an operation needing more coins.
+# {2}: the amount of necessary coins; {3} the amount of coins needed; {4} the amount of coins the tribe has
+moreCoins: 'You need {1}{2}{0} coins to do that.'
+
+# Sent when the player's tribe cannot claim any more land according to the above settings
+noMoreLand: 'Your tribe cannot claim any more land.'
+
+# Sent when a player tries to upgrade a fully upgraded tribe
+fullyUpgraded: 'Your tribe is already fully upgraded.'
+
+# Sent when a player tries to go to tribe home but no home is set
+noHomeSet: 'You tribe does not have a set home.'
+
+# Sent when a player tries to purchase less than one coin.
+oneRequired: 'You must purchase at least one coin.'
+
+# Sent when a player tries to purchase coins but does not have enough money
+# {2}: balance needed; {3}: difference; {4} current balance
+lowBalance: 'You need ${2} to do this.  You have ${4}.  You need ${3}.'
+
+# Sent when something goes wrong while performing a transaction.
+transactionError: 'Sorry, something went wrong. Please try again later.'
+
+# Sent when the chief tries to leave his tribe.
+chiefLeave: "The chief cannot leave his tribe."

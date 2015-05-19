@@ -3,12 +3,14 @@ package co.valdeon.Tribes;
 import co.valdeon.Tribes.commands.TribesCmd;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.events.TribeEarnCoinsEvent;
+import co.valdeon.Tribes.hooks.VaultHook;
 import co.valdeon.Tribes.listeners.*;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.CommandLoader;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,20 +30,26 @@ public class Tribes extends JavaPlugin {
 
     private static Database db;
     private static File dDir;
+    private static Economy econ;
 
     @Override
     public void onEnable() {
         new Config(this);
         dDir = getDataFolder();
 
-        registerCommands();
-        registerListeners();
-
         if(!Database.verifyDBConnection())
             getPluginManager().disablePlugin(this);
         db = new Database();
 
         TribeLoader.load(this);
+
+        if(new VaultHook(this).getSuccess()) {
+            econ = VaultHook.getEcon();
+            getLogger().log(Level.INFO, "Tribes successfully connected to Vault.");
+        }
+
+        registerCommands();
+        registerListeners();
 
         load();
     }
@@ -63,7 +71,7 @@ public class Tribes extends JavaPlugin {
         Message.init();
 
         for(PluginCommand c : CommandLoader.cmds) {
-            c.setExecutor(new TribesCmd());
+            c.setExecutor(new TribesCmd(this));
         }
     }
 
@@ -121,6 +129,15 @@ public class Tribes extends JavaPlugin {
 
     public static void call(Event e) {
         Bukkit.getPluginManager().callEvent(e);
+    }
+
+    public void reloadCfg() {
+        reloadConfig();
+        new Config(this);
+    }
+
+    public static Economy getEcon() {
+        return econ;
     }
 
 }

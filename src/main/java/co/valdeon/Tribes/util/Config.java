@@ -17,6 +17,8 @@ public class Config {
 
     public static int kickPower;
 
+    public static int coinPrice;
+
     public static String colorOne;
     public static String colorTwo;
     public static String errorColor;
@@ -44,6 +46,23 @@ public class Config {
     public static String playerHigherRank;
     public static String kicked;
     public static String kickedKickee;
+    public static String listTribes;
+    public static String tooManyPages;
+    public static String nonZero;
+    public static String moreCoins;
+    public static String noMoreLand;
+    public static String fullyUpgraded;
+    public static String teleportHome;
+    public static String setHome;
+    public static String header;
+    public static String footer;
+    public static String upgraded;
+    public static String oneRequired;
+    public static String lowBalance;
+    public static String transactionError;
+    public static String buyCoins;
+    public static String chiefLeave;
+    public static String leave;
 
     public static boolean chatFeatures;
 
@@ -84,6 +103,24 @@ public class Config {
         kicked = (String)get(String.class, "kicked");
         kickedKickee = (String)get(String.class, "kickedKickee");
         chatFeatures = (boolean)get(boolean.class, "chatFeatures");
+        listTribes = (String)get(String.class, "listTribes");
+        tooManyPages = (String)get(String.class, "tooManyPages");
+        nonZero = (String)get(String.class, "nonZero");
+        moreCoins = (String)get(String.class, "moreCoins");
+        noMoreLand = (String)get(String.class, "noMoreLand");
+        fullyUpgraded = (String)get(String.class, "fullyUpgraded");
+        teleportHome = (String)get(String.class, "teleportHome");
+        setHome = (String)get(String.class, "setHome");
+        header = (String)get(String.class, "header");
+        footer = (String)get(String.class, "footer");
+        upgraded = (String)get(String.class, "upgraded");
+        coinPrice = (int)get(int.class, "coinPrice");
+        oneRequired = (String)get(String.class, "oneRequired");
+        lowBalance = (String)get(String.class, "lowBalance");
+        transactionError = (String)get(String.class, "transactionError");
+        buyCoins = (String)get(String.class, "buyCoins");
+        chiefLeave = (String)get(String.class, "chiefLeave");
+        leave = (String)get(String.class, "leave");
     }
 
     public Object get(Class c, String path) {
