@@ -122,6 +122,10 @@ promoter: '{0}You were promoted to {1}{2}{0} in {1}{3}{0} by {1}{4}{0}.'
 # {2}: ability name; {3}: ability multiplier; {4}: price
 buyAbility: '{0}You upgraded {1}{2}{0} to level {1}{3}{0} for a cost of {1}${4}{0}.'
 
+# Sent to a chief who demotes him or herself
+# {2}: the tribe name
+chiefResign: '{0}You are now a member in {1}{2}{0}.'
+
 # ------ Error Messages ------ #
 
 # Sent when a tribe doesn't exist.

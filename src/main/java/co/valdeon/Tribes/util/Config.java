@@ -72,6 +72,7 @@ public class Config {
     public static String promotee;
     public static String oneChief;
     public static String buyAbility;
+    public static String chiefResign;
 
     public static boolean chatFeatures;
 
@@ -139,6 +140,7 @@ public class Config {
         oneChief = (String)get(String.class, "oneChief");
         saveFrequency = (int)get(int.class, "saveFrequency");
         buyAbility = (String)get(String.class, "buyAbility");
+        chiefResign = (String)get(String.class, "chiefResign");
     }
 
     public static Object get(Class c, String path) {

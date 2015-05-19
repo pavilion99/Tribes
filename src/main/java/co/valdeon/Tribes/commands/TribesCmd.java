@@ -666,7 +666,42 @@ public class TribesCmd extends TribeCommand {
                     return true;
                 }
 
+                OfflinePlayer gPlayer = Bukkit.getOfflinePlayer(args[1]);
 
+                if(!tribew.getMembers().containsKey(gPlayer)) {
+                    Message.message(sender, err(), Config.playerNotInTribe);
+                    return true;
+                }
+
+                tribew.getMembers().put((Player)sender, TribeRank.MEMBER);
+                tribew.getMembers().put(gPlayer, TribeRank.CHIEF);
+
+                Database.setRank((Player)sender, TribeRank.MEMBER);
+                Database.setRank(gPlayer, TribeRank.CHIEF);
+
+                Message.message(sender, Message.format(Config.chiefResign, Config.colorOne, Config.colorTwo, tribew.getName()));
+                if(gPlayer.isOnline()) {
+                    Message.message(gPlayer.getPlayer(), Message.format(Config.promotee, senderRank.getName(), tribew.getName(), sender.getName()));
+                }
+
+                return true;
+            case "removeability":
+                if(args.length != 2) {
+                    Message.message(sender, err(), Config.invalidSubargs);
+                    Message.message(sender, err(), "/t removeability <ability>");
+                    return true;
+                }
+
+                Tribe tb = TribeLoader.getTribe((Player)sender);
+
+                if(tb == null) {
+                    Message.message(sender, err(), Config.notInTribe);
+                    return true;
+                }
+
+
+
+                return true;
             default:
                 Message.messageInvalidArgs(sender, this.getClass());
                 return true;
