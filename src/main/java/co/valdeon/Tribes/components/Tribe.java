@@ -1,7 +1,7 @@
 package co.valdeon.Tribes.components;
 
 import co.valdeon.Tribes.Tribes;
-import co.valdeon.Tribes.components.abilities.AbilitySpeed;
+import co.valdeon.Tribes.components.abilities.*;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
@@ -264,29 +264,40 @@ public class Tribe {
             if(p.isOnline()) {
                 switch (a) {
                     case FIRERESISTANCE:
+                        new AbilityFireResistance(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case HASTE:
+                        new AbilityHaste(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case HEALTHBOOST:
+                        new AbilityHealthBoost(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case INVISIBILITY:
+                        new AbilityInvisibility(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case JUMP:
+                        new AbilityJump(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case NIGHTVISION:
+                        new AbilityNightVision(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case REGEN:
+                        new AbilityRegen(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case RESISTANCE:
+                        new AbilityResistance(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case SATURATION:
+                        new AbilitySaturation(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case SPEED:
                         new AbilitySpeed(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case STRENGTH:
+                        new AbilityStrength(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     case WATERBREATHING:
+                        new AbilityWaterBreathing(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
                         break;
                     default:
                         break;
