@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityRegen extends Ability {
 
     public AbilityRegen(Player p, int i) {
-        super(p, i);
+        super(p, i, "regen");
     }
 
     @Override

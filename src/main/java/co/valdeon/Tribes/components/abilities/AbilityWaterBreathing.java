@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityWaterBreathing extends Ability {
 
     public AbilityWaterBreathing(Player p, int i) {
-        super(p, i);
+        super(p, i, "waterbreathing");
     }
 
     @Override

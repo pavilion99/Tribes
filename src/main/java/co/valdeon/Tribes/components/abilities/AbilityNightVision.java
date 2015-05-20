@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityNightVision extends Ability {
 
     public AbilityNightVision(Player p, int i) {
-        super(p, i);
+        super(p, i, "nightvision");
     }
 
     @Override

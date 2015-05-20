@@ -2,9 +2,10 @@
 worldName: 'world'
 
 # Sets chat formatting colors
-colorOne: '9'
-colorTwo: 'e'
+colorOne: 'e'
+colorTwo: 'b'
 errorColor: 'c'
+coinsColor: 'a'
 
 # Each of these sets the amount of chunks each tier can claim
 tierOneChunks: 25
@@ -17,7 +18,7 @@ tierFiveChunks: 125
 saveFrequency: 5
 
 # The price of one tribe coin
-coinPrice: 1250
+coinPrice: 12500
 
 # What to name the database, or what database to access if one is already created
 db: 'Tribes'
@@ -33,10 +34,10 @@ kickPower: 3
 # {0}: colorOne; {1}: colorTwo
 
 # Header
-header: '&6&l&m[=#-----------------------------------#=]'
+header: '&6&l&m[#-------------- &r&b&lTribes&6&l&m --------------#]'
 
 # Footer
-footer: '&6&l&m[=#-----------------------------------#=]'
+footer: '&6&l&m[#-----------------------------------#]'
 
 # Sent to all members of a tribe when someone earns coins for the tribe.
 # {2}: Player who earned the coins; {3}: the amount of coins; {4}: the name of the tribe
@@ -103,8 +104,8 @@ setHome: '{0}You have successfully set the tribe home for {1}{2}{0}.'
 upgrade: '{0}You have successfully upgraded your tribe to tier {1}{2}{0}.'
 
 # Sent when a player buys coins for his or her tribe
-# {2}: the amount of coins bought; {3}: the price; {4} his or her new balance; {5]: his or her tribe name; {6}: new tribe coin balance
-buyCoins: '{0}You bought {1}{2}{0} coins for ${1}{5}{0} (total: {1}{6}{0}).  Total cost: {1}${3}{0}.  New balance: {1}${4}{0}.'
+# {2}: the amount of coins bought; {3}: the price; {4} his or her new balance; {5]: his or her tribe name; {6}: new tribe coin balance; {7}: the coin color
+buyCoins: '{0}You bought {7}{2}{0} coins for ${1}{5}{0} (total: {1}{6}{0}).  Total cost: {1}${3}{0}.  New balance: {1}${4}{0}.'
 
 # Sent when a player leaves his or her tribe
 # {2}: the tribe name
@@ -119,8 +120,20 @@ promoter: '{0}Promoted {1}{4}{0} to {1}{2}{0} in {1}{3}{0}.'
 promoter: '{0}You were promoted to {1}{2}{0} in {1}{3}{0} by {1}{4}{0}.'
 
 # Sent to a player who buys an ability for his or her tribe
-# {2}: ability name; {3}: ability multiplier; {4}: price
-buyAbility: '{0}You upgraded {1}{2}{0} to level {1}{3}{0} for a cost of {1}${4}{0}.'
+# {2}: ability name; {3}: ability multiplier; {4}: price; {5}: the coin color
+buyAbility: '{0}You upgraded {1}{2}{0} to level {1}{3}{0} for a cost of {5}{4}{0} coins.'
+
+# Sent to a chief who demotes him or herself
+# {2}: the tribe name
+chiefResign: '{0}You are now a member in {1}{2}{0}.'
+
+# Sent to someone who removes an ability from their tribe
+# {2}: the ability
+removeAbility: '{0}You removed the {1}{2}{0} ability from your tribe.'
+
+# Sent to someone who lowers an ability in their tribe
+# {2}: the ability; {3}: the new level
+lowerAbility: '{0}You lowered {1}{2}{0} to level {1}{3}{0}.'
 
 # ------ Error Messages ------ #
 
@@ -164,8 +177,8 @@ nonZero: 'Your page number cannot be 0.'
 tooManyPages: 'That page does not exist.'
 
 # Sent when a player tries to perform an operation needing more coins.
-# {2}: the amount of necessary coins; {3} the amount of coins needed; {4} the amount of coins the tribe has
-moreCoins: 'You need {1}{2}{0} coins to do that.'
+# {2}: the amount of necessary coins; {3} the amount of coins needed; {4} the amount of coins the tribe has; {5}: the coins color
+moreCoins: 'You need {5}{2}{0} coins to do that.'
 
 # Sent when the player's tribe cannot claim any more land according to the above settings
 noMoreLand: 'Your tribe cannot claim any more land.'

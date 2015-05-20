@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityJump extends Ability {
 
     public AbilityJump(Player p, int i) {
-        super(p, i);
+        super(p, i, "jump");
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilitySaturation extends Ability {
 
     public AbilitySaturation(Player p, int i) {
-        super(p, i);
+        super(p, i, "saturation");
     }
 
     @Override

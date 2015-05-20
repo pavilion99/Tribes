@@ -153,7 +153,8 @@ public class Tribes extends JavaPlugin {
 
     public void reloadCfg() {
         reloadConfig();
-        new Config(this);
+        new Config(this).init();
+        new Config.Prices().init();
     }
 
     public static Economy getEcon() {

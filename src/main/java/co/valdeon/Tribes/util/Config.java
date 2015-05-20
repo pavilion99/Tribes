@@ -73,6 +73,9 @@ public class Config {
     public static String oneChief;
     public static String buyAbility;
     public static String chiefResign;
+    public static String colorCoins;
+    public static String removeAbility;
+    public static String lowerAbility;
 
     public static boolean chatFeatures;
 
@@ -141,6 +144,9 @@ public class Config {
         saveFrequency = (int)get(int.class, "saveFrequency");
         buyAbility = (String)get(String.class, "buyAbility");
         chiefResign = (String)get(String.class, "chiefResign");
+        colorCoins = "&" + get(String.class, "coinsColor");
+        removeAbility = (String)get(String.class, "removeAbility");
+        lowerAbility = (String)get(String.class, "lowerAbility");
     }
 
     public static Object get(Class c, String path) {

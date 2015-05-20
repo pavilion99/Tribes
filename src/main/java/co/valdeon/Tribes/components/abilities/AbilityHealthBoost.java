@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityHealthBoost extends Ability {
 
     public AbilityHealthBoost(Player p, int i) {
-        super(p, i);
+        super(p, i, "healthboost");
     }
 
     @Override

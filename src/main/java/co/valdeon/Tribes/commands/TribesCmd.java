@@ -28,7 +28,7 @@ import java.util.logging.Level;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability", "removeability", "i"};
 
     public TribesCmd(Tribes t) {
         super(t);
@@ -272,6 +272,7 @@ public class TribesCmd extends TribeCommand {
                 }
 
                 break;
+            case "i":
             case "info":
                 if (args.length == 1) {
                     Tribe ta = TribeLoader.getTribe((Player) sender);
@@ -280,9 +281,9 @@ public class TribesCmd extends TribeCommand {
                         Message.message(sender, Config.header);
                         Message.message(sender, Config.colorOne + "Name: " + Config.colorTwo + ta.getName());
                         Message.message(sender, Config.colorOne + "Claimed land: " + Config.colorTwo + ta.getChunks().size() + Config.colorOne + " chunks");
-                        Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().name());
+                        Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().getValue());
                         Message.message(sender, Config.colorOne + "Members: " + Config.colorTwo + ta.getMembers().size());
-                        Message.message(sender, Config.colorOne + "Coins: " + Config.colorTwo + ta.getCoins());
+                        Message.message(sender, Config.colorOne + "Coins: " + Config.colorCoins + ta.getCoins());
                         Message.message(sender, Config.colorOne + "Abilities: " + Config.colorTwo + ta.getAbilityString(true));
                         Message.message(sender, Config.footer);
                     } else {
@@ -292,14 +293,16 @@ public class TribesCmd extends TribeCommand {
                     Tribe ta = TribeLoader.getTribeFromStringIgnoreCase(args[1]);
 
                     if (ta != null) {
-                        Message.message(sender, "&9Tribe Information");
-                        Message.message(sender, "&9Name: &e" + ta.getName());
-                        Message.message(sender, "&9Claimed land: &e" + ta.getChunks().size() + "&9 chunks");
-                        Message.message(sender, "&9Tribe tier: &e" + ta.getTier().name());
-                        Message.message(sender, "&9Members: &e" + ta.getMembers().size());
-                        Message.message(sender, "&9Coins: &e" + ta.getCoins());
+                        Message.message(sender, Config.header);
+                        Message.message(sender, Config.colorOne + "Name: " + Config.colorTwo + ta.getName());
+                        Message.message(sender, Config.colorOne + "Claimed land: " + Config.colorTwo + ta.getChunks().size() + Config.colorOne + " chunks");
+                        Message.message(sender, Config.colorOne + "Tribe tier: " + Config.colorTwo + ta.getTier().getValue());
+                        Message.message(sender, Config.colorOne + "Members: " + Config.colorTwo + ta.getMembers().size());
+                        Message.message(sender, Config.colorOne + "Coins: " + Config.colorCoins + ta.getCoins());
+                        Message.message(sender, Config.colorOne + "Abilities: " + Config.colorTwo + ta.getAbilityString(true));
+                        Message.message(sender, Config.footer);
                     } else {
-                        Message.message(sender, "&cThat tribe doesn't exist.");
+                        Message.message(sender, err(), "That tribe doesn't exist.");
                     }
                 } else {
                     Message.message(sender, err(), Config.invalidSubargs);
@@ -395,7 +398,7 @@ public class TribesCmd extends TribeCommand {
                 switch(tier.getValue()) {
                     case 1:
                         if(coins < 2) {
-                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(2), Integer.toString(2 - coins), Integer.toString(coins)));
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(2), Integer.toString(2 - coins), Integer.toString(coins), Config.colorCoins));
                             return true;
                         }
 
@@ -404,7 +407,7 @@ public class TribesCmd extends TribeCommand {
                         break;
                     case 2:
                         if(coins < 4) {
-                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(4), Integer.toString(4 - coins), Integer.toString(coins)));
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(4), Integer.toString(4 - coins), Integer.toString(coins), Config.colorCoins));
                             return true;
                         }
 
@@ -413,7 +416,7 @@ public class TribesCmd extends TribeCommand {
                         break;
                     case 3:
                         if(coins < 6) {
-                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(6), Integer.toString(6 - coins), Integer.toString(coins)));
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(6), Integer.toString(6 - coins), Integer.toString(coins), Config.colorCoins));
                             return true;
                         }
 
@@ -422,7 +425,7 @@ public class TribesCmd extends TribeCommand {
                         break;
                     case 4:
                         if(coins < 8) {
-                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(8), Integer.toString(8 - coins), Integer.toString(coins)));
+                            Message.message(sender, err(), Message.format(Config.moreCoins, Integer.toString(8), Integer.toString(8 - coins), Integer.toString(coins), Config.colorCoins));
                             return true;
                         }
 
@@ -469,7 +472,7 @@ public class TribesCmd extends TribeCommand {
                 int cons = trile.getCoins();
 
                 if(cons < price) {
-                    Message.message(sender, err(), Message.format(Config.moreCoins, "&" + Config.errorColor, Config.colorTwo, Integer.toString(price), Integer.toString(price - cons), Integer.toString(cons)));
+                    Message.message(sender, err(), Message.format(Config.moreCoins, "&" + Config.errorColor, Config.colorTwo, Integer.toString(price), Integer.toString(price - cons), Integer.toString(cons), Config.colorCoins));
                     return true;
                 }
 
@@ -477,15 +480,15 @@ public class TribesCmd extends TribeCommand {
                     if(gy.getText().equals(a.getText())) {
                         gy.setMultiplier(gy.getMultiplier() + 1);
                         trile.subtractCoins(price).push();
-                        Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price)));
+                        Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price), Config.colorCoins));
                         return true;
                     }
                 }
 
-                trile.addAbility(a);
+                trile.addAbility(a, tribes);
                 trile.subtractCoins(price).push();
 
-                Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price)));
+                Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString(price), Config.colorCoins));
 
                 return true;
             case "home":
@@ -558,7 +561,7 @@ public class TribesCmd extends TribeCommand {
                     return true;
                 } else {
                     tribeh.addCoins(i).push();
-                    Message.message(sender, Message.format(Config.buyCoins, Config.colorOne, Config.colorTwo, Integer.toString(i), Integer.toString(Config.coinPrice * i), Double.toString(Tribes.getEcon().getBalance((Player)sender)), tribeh.getName(), Integer.toString(tribeh.getCoins())));
+                    Message.message(sender, Message.format(Config.buyCoins, Config.colorOne, Config.colorTwo, Integer.toString(i), Integer.toString(Config.coinPrice * i), Double.toString(Tribes.getEcon().getBalance((Player)sender)), tribeh.getName(), Integer.toString(tribeh.getCoins()), Config.colorCoins));
                     return true;
                 }
             case "leave":
@@ -699,7 +702,31 @@ public class TribesCmd extends TribeCommand {
                     return true;
                 }
 
+                AbilityType tability = AbilityType.getAbilityTypeFromString(args[1].toUpperCase());
 
+                if(tability == null) {
+                    Message.message(sender, err(), "Valid Abilities:");
+                    Message.message(sender, err(), "fireresistance, haste, healthboost, invisibility, jump, nightvision, regen, resistance, saturation, speed, strength, waterbreathing");
+                    return true;
+                }
+
+                for(AbilityType tc : tb.getAbilities()) {
+                    if(tc.getText().equals(tability.getText())) {
+                        tb.addCoins(1);
+                        if(tc.getMultiplier() == 0) {
+                            String name = tc.getText();
+                            tb.getAbilities().remove(tc);
+                            Message.message(sender, Message.format(Config.removeAbility, Config.colorOne, Config.colorTwo, name));
+                            return true;
+                        } else {
+                            String name = tc.getText();
+                            tc.setMultiplier(tc.getMultiplier() - 1);
+                            int multi = tc.getMultiplier();
+                            Message.message(sender, Message.format(Config.lowerAbility, Config.colorOne, Config.colorTwo, name, Integer.toString(multi + 1)));
+                            return true;
+                        }
+                    }
+                }
 
                 return true;
             default:

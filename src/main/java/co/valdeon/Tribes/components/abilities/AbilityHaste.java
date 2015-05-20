@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityHaste extends Ability {
 
     public AbilityHaste(Player p, int i) {
-        super(p, i);
+        super(p, i, "haste");
     }
 
     @Override

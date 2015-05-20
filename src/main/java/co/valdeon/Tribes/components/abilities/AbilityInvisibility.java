@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AbilityInvisibility extends Ability {
 
     public AbilityInvisibility(Player p, int i) {
-        super(p, i);
+        super(p, i, "invisibility");
     }
 
     @Override

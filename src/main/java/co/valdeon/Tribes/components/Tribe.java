@@ -1,5 +1,7 @@
 package co.valdeon.Tribes.components;
 
+import co.valdeon.Tribes.Tribes;
+import co.valdeon.Tribes.components.abilities.AbilitySpeed;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
@@ -251,9 +253,46 @@ public class Tribe {
         this.members.put(p, t);
     }
 
-    public Tribe addAbility(AbilityType a) {
+    public Tribe addAbility(AbilityType a, Tribes t) {
         this.abilities.add(a);
+        updatePlayerAbilities(a, t);
         return this;
+    }
+
+    public void updatePlayerAbilities(AbilityType a, Tribes t) {
+        for(OfflinePlayer p : this.getMembers().keySet()) {
+            if(p.isOnline()) {
+                switch (a) {
+                    case FIRERESISTANCE:
+                        break;
+                    case HASTE:
+                        break;
+                    case HEALTHBOOST:
+                        break;
+                    case INVISIBILITY:
+                        break;
+                    case JUMP:
+                        break;
+                    case NIGHTVISION:
+                        break;
+                    case REGEN:
+                        break;
+                    case RESISTANCE:
+                        break;
+                    case SATURATION:
+                        break;
+                    case SPEED:
+                        new AbilitySpeed(p.getPlayer(), a.getMultiplier()).runTaskTimer(t, 0, 20);
+                        break;
+                    case STRENGTH:
+                        break;
+                    case WATERBREATHING:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
 }
