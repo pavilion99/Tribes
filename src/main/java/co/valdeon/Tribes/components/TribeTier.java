@@ -85,4 +85,8 @@ public enum TribeTier {
             return TIER_ONE;
     }
 
+    public int getChunks() {
+        return this.chunks;
+    }
+
 }

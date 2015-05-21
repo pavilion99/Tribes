@@ -11,6 +11,7 @@ import co.valdeon.Tribes.schedules.DeleteTribe;
 import co.valdeon.Tribes.schedules.PushPlayer;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
+import co.valdeon.Tribes.util.Direction;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import co.valdeon.Tribes.util.command.TribeCommand;
@@ -337,29 +338,83 @@ public class TribesCmd extends TribeCommand {
                 }
 
                 if(radius % 2 == 0) {
+                    int realRadius = radius - 1; // 3
 
+                    Direction d = Direction.getCardinalFromYaw(((Player) sender).getLocation());
 
-                    Chunk x = ((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation());
+                    int dir1 = (int)Math.floor(realRadius / 2.0d); // 1
+                    int dir2 = (int)Math.ceil(realRadius / 2.0d); // 2
 
-                    // Make sure this chunk isn't already owned
-                    if (th.getChunks().contains(((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation()))) {
-                        Message.message(sender, err(), Config.alreadyOwned);
-                        return true;
+                    List<Chunk> toClaim = new ArrayList<>();
+
+                    Chunk playerChunk = ((Player)sender).getLocation().getChunk();
+
+                    toClaim.add(playerChunk);
+
+                    switch(d) {
+                        case NORTH:
+                            for(int i = -dir1; i <= dir2; i++) {
+                                for(int j = -dir1; j <= dir2; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
+                                }
+                            }
+                            break;
+                        case EAST:
+                            for(int i = -dir1; i <= dir2; i++) {
+                                for(int j = -dir1; j <= dir2; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + j, playerChunk.getZ() + i));
+                                }
+                            }
+                            break;
+                        case SOUTH:
+                            for(int i = -dir1; i <= dir2; i++) {
+                                for(int j = -dir1; j <= dir2; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() + j));
+                                }
+                            }
+                            break;
+                        case WEST:
+                            for(int i = -dir1; i <= dir2; i++) {
+                                for(int j = -dir1; j <= dir2; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() + j));
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
 
-                    for (List<Chunk> chonk : TribeLoader.ownedChunks.values()) {
-                        if (chonk.contains(x)) {
-                            Message.message(sender, err(), Config.ownedByOtherTribe);
-                            return true;
+                    List<Chunk> fin = new ArrayList<>();
+
+                    int counter = 0;
+                    int alreadyOwned = 0;
+                    int ownedByOthers = 0;
+
+                    Chunk[] finArr = toClaim.toArray(new Chunk[1]);
+
+                    for(int i = 0; i < finArr.length; i++) {
+                        if(TribeLoader.getChunkOwner(finArr[i]) == null) {
+                            fin.add(finArr[i]);
+                            counter++;
+                        } else if(!TribeLoader.getChunkOwner(finArr[i]).equals(th)) {
+                            ownedByOthers++;
+                        } else if(TribeLoader.getChunkOwner(finArr[i]).equals(th)) {
+                            alreadyOwned++;
+                        }
+
+                        if((i + 1) > th.getTier().getChunks()) {
+                            Message.message(sender, err(), Config.noMoreLand);
+                            break;
                         }
                     }
 
-                    if (th.getChunks().size() >= TribeLoader.getAllowedChunks(th)) {
-                        Message.message(sender, err(), Config.noMoreLand);
-                        return true;
+                    for(Chunk chonk : finArr) {
+                        th.addChunk(chonk);
                     }
 
-                    th.addChunk(x).push();
+                    th.push();
+
+
                 } else {
 
                 }
