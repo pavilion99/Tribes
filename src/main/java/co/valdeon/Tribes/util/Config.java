@@ -76,8 +76,12 @@ public class Config {
     public static String colorCoins;
     public static String removeAbility;
     public static String lowerAbility;
+    public static String enteringTerritory;
+    public static String enteringNoTerritory;
+    public static String errBuild;
 
     public static boolean chatFeatures;
+    public static boolean debugQueries;
 
     public Config(Tribes tribess) {
         tribes = tribess;
@@ -147,6 +151,10 @@ public class Config {
         colorCoins = "&" + get(String.class, "coinsColor");
         removeAbility = (String)get(String.class, "removeAbility");
         lowerAbility = (String)get(String.class, "lowerAbility");
+        enteringTerritory = (String)get(String.class, "enteringTerritory");
+        enteringNoTerritory = (String)get(String.class, "enteringNoTerritory");
+        errBuild = (String)get(String.class, "errBuild");
+        debugQueries = (boolean)get(boolean.class, "debugQueries");
     }
 
     public static Object get(Class c, String path) {

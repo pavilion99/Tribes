@@ -5,8 +5,10 @@ import co.valdeon.Tribes.components.AbilityType;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.abilities.*;
 import co.valdeon.Tribes.util.Config;
+import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -72,6 +74,23 @@ public class PlayerMoveListener implements Listener {
                     default:
                         break;
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void announceTribe(PlayerMoveEvent e) {
+        Tribe t = TribeLoader.getChunkOwner(e.getTo().getChunk());
+        Tribe u = TribeLoader.getChunkOwner(e.getFrom().getChunk());
+
+        if(t != null) {
+            if(t.equals(u))
+                return;
+
+            Message.message(e.getPlayer(), Message.format(Config.enteringTerritory, Config.colorOne, Config.colorTwo, t.getName()));
+        } else {
+            if(u != null) {
+                Message.message(e.getPlayer(), Message.format(Config.enteringNoTerritory));
             }
         }
     }

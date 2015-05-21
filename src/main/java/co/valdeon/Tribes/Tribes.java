@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Tribes extends JavaPlugin {
 
@@ -36,9 +37,12 @@ public class Tribes extends JavaPlugin {
     private static File dDir;
     private static Economy econ;
     private static List<BukkitTask> tasks = new ArrayList<>();
+    private static Logger log;
 
     @Override
     public void onEnable() {
+        log = this.getLogger();
+
         new Config(this).init();
         new Config.Prices().init();
 
@@ -65,13 +69,12 @@ public class Tribes extends JavaPlugin {
     @Override
     public void onDisable() {
         for(Tribe t : TribeLoader.tribesList) {
-            t.push();
+            t.pushSync();
         }
     }
 
     public void registerListeners() {
         getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        getPluginManager().registerEvents(new PlayerQuitListener(), this);
         getPluginManager().registerEvents(new TribeEarnCoinsListener(), this);
         getPluginManager().registerEvents(new TribeInvitePlayerListener(), this);
         getPluginManager().registerEvents(new TribeKickPlayerListener(), this);
@@ -112,35 +115,11 @@ public class Tribes extends JavaPlugin {
     }
 
     public static void log(Level l, String s) {
-        Bukkit.getLogger().log(l, s);
+        log.log(l, s);
     }
 
     public static Database getDB() {
         return db;
-    }
-
-    public static class Players {
-
-        private static HashMap<Player, HashMap<String, Object>> playerData = new HashMap<>();
-
-        public static Object get(Player p, String s) {
-            return playerData.get(p).get(s);
-        }
-
-        public static void put(Player p, String s, Object t) {
-            if(!containsKey(p))
-                playerData.put(p, new HashMap<String, Object>());
-            playerData.get(p).put(s, t);
-        }
-
-        public static void remove(Player p) {
-            playerData.remove(p);
-        }
-
-        public static boolean containsKey(Player player) {
-            return playerData.containsKey(player);
-        }
-
     }
 
     public static File getDataDir() {

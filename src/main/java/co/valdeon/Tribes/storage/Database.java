@@ -5,6 +5,7 @@ import co.valdeon.Tribes.components.AbilityType;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.components.TribeRank;
 import co.valdeon.Tribes.components.TribeTier;
+import co.valdeon.Tribes.schedules.PushPlayer;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
@@ -92,7 +93,7 @@ public class Database {
 
     private static List<Chunk> getChunksFromString(String s) {
         List<Chunk> chunks = new ArrayList<>();
-        if(s == null)
+        if(s == null || s.equals(""))
             return chunks;
         String[] chenks = s.split(";");
         for(String ss : chenks) {
@@ -200,15 +201,11 @@ public class Database {
                 int id = r.getInt("id");
 
                 if(!dbName.equals(playerName))
-                    new Query(QueryType.UPDATE, "`users`").set(new Set("name", "'" + playerName + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'").query(true).close();
+                    new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("name", "'" + playerName + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'"), true);
 
                 Tribe t = TribeLoader.getTribeFromId(tribeId);
                 if(t != null)
                     t.addMember(p);
-
-                Tribes.Players.put(p, "tribe", t);
-                Tribes.Players.put(p, "tribeRank", role);
-                Tribes.Players.put(p, "id", id);
             } else {
                 Query qa = new Query(QueryType.INSERTINTO, "`users`").columns("uuid", "name").values("'" + uuid + "'", "'" + playerName + "'");
                 ResultSet ra = qa.query(true);
@@ -222,8 +219,6 @@ public class Database {
                     Tribes.log(Level.WARNING, "Failed to insert player with uuid " + uuid + " and name " + playerName + " into the database");
                     e.printStackTrace();
                 }
-
-                Tribes.Players.put(p, "id", id);
 
                 ra.close();
                 qa.close();
@@ -241,24 +236,14 @@ public class Database {
         int id = t.getId();
         String rank = r.getName();
 
-        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "'" + rank + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'");
-        q.query();
-        q.close();
-
-        Tribes.Players.put(p, "tribe", id);
-        Tribes.Players.put(p, "tribeRank", r.getName());
+        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "'" + rank + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(TribeLoader.getTribes());
     }
 
     public static void setPlayerMemberOfNoTribe(Player p) {
         String uuid = p.getUniqueId().toString();
         int id = 0;
 
-        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "''")).where("uuid", WhereType.EQUALS, "'" + uuid + "'");
-        q.query();
-        q.close();
-
-        Tribes.Players.put(p, "tribe", null);
-        Tribes.Players.put(p, "tribeRank", null);
+        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "''")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(TribeLoader.getTribes());
     }
 
     private static List<AbilityType> getAbilitiesFromString(String s) {
@@ -297,9 +282,7 @@ public class Database {
     }
 
     public static void setRank(OfflinePlayer p, TribeRank t) {
-        Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("role", "'" + t.getName() + "'")).where("uuid", WhereType.EQUALS, "'" + p.getUniqueId() + "'");
-        q.query();
-        q.close();
+        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("role", "'" + t.getName() + "'")).where("uuid", WhereType.EQUALS, "'" + p.getUniqueId() + "'"));
     }
 
 }

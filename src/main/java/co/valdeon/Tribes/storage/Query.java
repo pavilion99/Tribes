@@ -1,6 +1,7 @@
 package co.valdeon.Tribes.storage;
 
 import co.valdeon.Tribes.Tribes;
+import co.valdeon.Tribes.util.Config;
 
 import java.io.Closeable;
 import java.sql.Connection;
@@ -59,6 +60,10 @@ public class Query implements Closeable {
     }
 
     public ResultSet query() {
+        if(Config.debugQueries) {
+            Tribes.log(Level.INFO, this.query);
+        }
+
         if(this.query == null)
             return null;
 
@@ -84,7 +89,9 @@ public class Query implements Closeable {
     }
 
     public ResultSet query(boolean returnKeys) {
-        Tribes.log(Level.INFO, this.query);
+        if(Config.debugQueries) {
+            Tribes.log(Level.INFO, this.query);
+        }
 
         if(!(this.q == QueryType.UPDATE || this.q == QueryType.INSERT || this.q == QueryType.INSERTINTO || this.q == QueryType.DELETE))
             return null;
@@ -96,7 +103,6 @@ public class Query implements Closeable {
             s = this.con.createStatement();
             s.executeUpdate(this.query);
         }catch(SQLException e) {
-            Tribes.log(Level.INFO, this.query);
             e.printStackTrace();
             return null;
         }
@@ -105,7 +111,6 @@ public class Query implements Closeable {
             ResultSet h = s.executeQuery("SELECT last_insert_rowid()");
             return returnKeys ? h : this.result;
         }catch (SQLException e) {
-            Tribes.log(Level.INFO, this.query);
             e.printStackTrace();
             return null;
         }

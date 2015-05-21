@@ -7,6 +7,8 @@ import co.valdeon.Tribes.components.TribeRank;
 import co.valdeon.Tribes.components.TribeTier;
 import co.valdeon.Tribes.events.TribeInvitePlayerEvent;
 import co.valdeon.Tribes.events.TribeKickPlayerEvent;
+import co.valdeon.Tribes.schedules.DeleteTribe;
+import co.valdeon.Tribes.schedules.PushPlayer;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
@@ -70,7 +72,7 @@ public class TribesCmd extends TribeCommand {
         switch(page) {
             case 1:
                 Message.message(s, Config.header);
-                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "1");
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorCoins, "1&e/&a3");
                 Message.message(s, Config.colorOne, "/t &f-" + Config.colorTwo + " Main command for tribes.");
                 Message.message(s, Config.colorOne, "/t create &f-" + Config.colorTwo + " Create a tribe.");
                 Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
@@ -81,7 +83,7 @@ public class TribesCmd extends TribeCommand {
                 break;
             case 2:
                 Message.message(s, Config.header);
-                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "2");
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorCoins, "2&e/&a3");
                 Message.message(s, Config.colorOne, "/t join &f-" + Config.colorTwo + " Join a tribe.");
                 Message.message(s, Config.colorOne, "/t info &f-" + Config.colorTwo + " View info about a tribe.");
                 Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
@@ -92,14 +94,14 @@ public class TribesCmd extends TribeCommand {
                 break;
             case 3:
                 Message.message(s, Config.header);
-                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "3");
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorCoins, "3&e/&a3");
                 Message.message(s, Config.colorOne, "/t leave &f-" + Config.colorTwo + " Leave a tribe.");
                 Message.message(s, Config.colorOne, "/t help &f-" + Config.colorTwo + " Show this information.");
                 Message.message(s, Config.footer);
                 break;
             default:
                 Message.message(s, Config.header);
-                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorTwo, "1");
+                Message.message(s, Config.colorOne, "Tribes Help - Page ", Config.colorCoins, "1&e/&a3");
                 Message.message(s, Config.colorOne, "/t &f-" + Config.colorTwo + " Main command for tribes.");
                 Message.message(s, Config.colorOne, "/t create &f-" + Config.colorTwo + " Create a tribe.");
                 Message.message(s, Config.colorOne, "/t invite &f-" + Config.colorTwo + " Invite someone to your tribe.");
@@ -120,13 +122,13 @@ public class TribesCmd extends TribeCommand {
                     return true;
                 }
 
-                if (TribeLoader.tribeExists(args[1])) {
-                    Message.message(sender, "&cThat tribe already exists.");
+                if (TribeLoader.getTribe((Player) sender) != null) {
+                    Message.message(sender, "&cYou are already in a tribe; you must destroy it before creating a new tribe.");
                     return true;
                 }
 
-                if (TribeLoader.getTribe((Player) sender) != null) {
-                    Message.message(sender, "&cYou are already in a tribe; you must destroy it before creating a new tribe.");
+                if (TribeLoader.tribeExists(args[1])) {
+                    Message.message(sender, "&cThat tribe already exists.");
                     return true;
                 }
 
@@ -134,11 +136,7 @@ public class TribesCmd extends TribeCommand {
                 Tribe g = new Tribe(args[1], (Player) sender).push(true);
                 TribeLoader.tribesList.add(g);
 
-                Query q = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("id", WhereType.EQUALS, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
-                Tribes.log(Level.INFO, Integer.toString((int) Tribes.Players.get((Player) sender, "id")));
-                Tribes.log(Level.INFO, Integer.toString(g.getId()));
-                q.query();
-                q.close();
+                new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(g.getId())), new Set("role", "'" + TribeRank.CHIEF.getName() + "'")).where("uuid", WhereType.EQUALS, "'" + ((Player) sender).getUniqueId().toString() + "'")).runTaskAsynchronously(TribeLoader.getTribes());
 
                 Message.message(sender, "&9You have successfully created the tribe &e" + g.getName() + "&9.");
 
@@ -220,14 +218,11 @@ public class TribesCmd extends TribeCommand {
                 }
 
                 TribeLoader.tribesList.remove(t);
+                TribeLoader.ownedChunks.remove(t);
 
-                Query h = new Query(QueryType.DELETE, "`tribes`").where("id", WhereType.EQUALS, Integer.toString(t.getId()));
-                h.query();
-                h.close();
+                new DeleteTribe(t).runTaskAsynchronously(TribeLoader.getTribes());
 
-                h = new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", "0"), new Set("role", "''")).where("tribe", WhereType.EQUALS, Integer.toString(t.getId()));
-                h.query();
-                h.close();
+                new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", "0"), new Set("role", "''")).where("tribe", WhereType.EQUALS, Integer.toString(t.getId()))).runTaskAsynchronously(TribeLoader.getTribes());
 
                 Message.message(sender, Message.format(Config.destroy, Config.colorOne, Config.colorTwo, t.getName()));
 
@@ -311,10 +306,22 @@ public class TribesCmd extends TribeCommand {
                 }
                 break;
             case "claim":
-                if (args.length != 1) {
+                if (args.length != 1 && args.length != 2) {
                     Message.message(sender, err(), Config.invalidSubargs);
-                    Message.message(sender, err(), "/t claim");
+                    Message.message(sender, err(), "/t claim [chunks]");
                     return true;
+                }
+
+                int radius = 1;
+
+                try {
+                    radius = Integer.parseInt(args[1]);
+                } catch(Exception e) {
+                    radius = 1;
+                }
+
+                if(radius > 5) {
+                    Message.message(sender, err(), Config.maxRadius);
                 }
 
                 if (TribeLoader.getTribe((Player) sender) == null) {
@@ -329,27 +336,33 @@ public class TribesCmd extends TribeCommand {
                     return true;
                 }
 
-                Chunk x = ((Player)sender).getWorld().getChunkAt(((Player)sender).getLocation());
+                if(radius % 2 == 0) {
 
-                // Make sure this chunk isn't already owned
-                if (th.getChunks().contains(((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation()))) {
-                    Message.message(sender, err(), Config.alreadyOwned);
-                    return true;
-                }
 
-                for (List<Chunk> chonk : TribeLoader.ownedChunks.values()) {
-                    if(chonk.contains(x)) {
-                        Message.message(sender, err(), Config.ownedByOtherTribe);
+                    Chunk x = ((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation());
+
+                    // Make sure this chunk isn't already owned
+                    if (th.getChunks().contains(((Player) sender).getWorld().getChunkAt(((Player) sender).getLocation()))) {
+                        Message.message(sender, err(), Config.alreadyOwned);
                         return true;
                     }
-                }
 
-                if(th.getChunks().size() >= TribeLoader.getAllowedChunks(th)) {
-                    Message.message(sender, err(), Config.noMoreLand);
-                    return true;
-                }
+                    for (List<Chunk> chonk : TribeLoader.ownedChunks.values()) {
+                        if (chonk.contains(x)) {
+                            Message.message(sender, err(), Config.ownedByOtherTribe);
+                            return true;
+                        }
+                    }
 
-                th.addChunk(x).push();
+                    if (th.getChunks().size() >= TribeLoader.getAllowedChunks(th)) {
+                        Message.message(sender, err(), Config.noMoreLand);
+                        return true;
+                    }
+
+                    th.addChunk(x).push();
+                } else {
+
+                }
 
                 break;
             case "list":
@@ -736,7 +749,7 @@ public class TribesCmd extends TribeCommand {
         return true;
     }
 
-    private static String err() {
+    public static String err() {
         return "&" + Config.errorColor;
     }
 

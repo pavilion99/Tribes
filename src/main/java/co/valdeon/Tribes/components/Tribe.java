@@ -2,6 +2,8 @@ package co.valdeon.Tribes.components;
 
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.abilities.*;
+import co.valdeon.Tribes.schedules.PushTribe;
+import co.valdeon.Tribes.schedules.PushTribesSchedule;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
@@ -10,7 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +25,6 @@ public class Tribe {
     private String name;
     private TribeTier tier;
     private HashMap<OfflinePlayer, TribeRank> members = new HashMap<>();
-    private List<Chunk> ownedChunks = new ArrayList<>();
     private int coins;
     private List<OfflinePlayer> invitees = new ArrayList<>();
     private List<AbilityType> abilities = new ArrayList<>();
@@ -31,19 +34,19 @@ public class Tribe {
         this.name = name;
         this.tier = TribeTier.TIER_ONE;
         this.members.put(creator, TribeRank.CHIEF);
-        this.ownedChunks.add(creator.getPlayer().getLocation().getChunk());
+        TribeLoader.ownedChunks.put(this, new ArrayList<Chunk>());
     }
 
     public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier, List<AbilityType> abilities, Location home) {
         this.name = name;
         this.tier = tier;
         this.members = members;
-        this.ownedChunks = ownedChunks;
         this.id = id;
         this.coins = coins;
         this.invitees = invitees;
         this.abilities = abilities;
         this.home = home;
+        TribeLoader.ownedChunks.put(this, ownedChunks);
     }
 
     public int getId() {
@@ -70,15 +73,6 @@ public class Tribe {
         return false;
     }
 
-    public boolean addMember(String s) {
-        OfflinePlayer p = Bukkit.getOfflinePlayer(s);
-        if(!(this.members.containsKey(p))) {
-            this.members.put(p, TribeRank.MEMBER);
-            return true;
-        }
-        return false;
-    }
-
     public void removeMember(OfflinePlayer p) {
         this.members.remove(p);
     }
@@ -88,6 +82,11 @@ public class Tribe {
     }
 
     public Tribe push() {
+        new PushTribe(this).runTaskAsynchronously(TribeLoader.getTribes());
+        return this;
+    }
+
+    public Tribe pushSync() {
         Database.pushTribe(this);
         return this;
     }
@@ -96,13 +95,15 @@ public class Tribe {
         if(setId) {
             this.id = Database.pushTribe(this);
         } else{
-            Database.pushTribe(this);
+            new PushTribe(this).runTaskAsynchronously(TribeLoader.getTribes());
         }
         return this;
     }
 
     public String getChunkString() {
-        Chunk[] x = ownedChunks.toArray(new Chunk[1]);
+        if(TribeLoader.ownedChunks.get(this) == null || TribeLoader.ownedChunks.get(this).isEmpty())
+            return "";
+        Chunk[] x = TribeLoader.ownedChunks.get(this).toArray(new Chunk[1]);
         String fin = "";
         for(int i = 0; i < x.length; i++) {
             fin += x[i].getX() + "," + x[i].getZ();
@@ -162,12 +163,11 @@ public class Tribe {
     }
 
     public List<Chunk> getChunks() {
-        return this.ownedChunks;
+        return TribeLoader.ownedChunks.get(this);
     }
 
     public Tribe addChunk(Chunk t) {
-        this.ownedChunks.add(t);
-        TribeLoader.ownedChunks.put(this, this.ownedChunks);
+        TribeLoader.ownedChunks.get(this).add(t);
         return this;
     }
 

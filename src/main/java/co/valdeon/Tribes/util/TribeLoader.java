@@ -16,7 +16,11 @@ public abstract class TribeLoader {
     public static List<Tribe> tribesList = new ArrayList<>();
     public static HashMap<Tribe, List<Chunk>> ownedChunks = new HashMap<>();
 
+    private static Tribes t;
+
     public static void load(Tribes tribes) {
+        t = tribes;
+
         HashMap<String, HashMap<String, Object>> listTribes = Database.getTribes();
 
         int g = 0;
@@ -104,5 +108,9 @@ public abstract class TribeLoader {
             default:
                 return Config.tierOneChunks;
         }
+    }
+
+    public static Tribes getTribes() {
+        return t;
     }
 }
