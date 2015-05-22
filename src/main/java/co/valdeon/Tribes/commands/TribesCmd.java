@@ -354,7 +354,6 @@ public class TribesCmd extends TribeCommand {
 
                     switch(d) {
                         case NORTH:
-                            Tribes.log(Level.INFO, "PLAYER FACING NORTH");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
                                     toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
@@ -362,15 +361,13 @@ public class TribesCmd extends TribeCommand {
                             }
                             break;
                         case EAST:
-                            Tribes.log(Level.INFO, "PLAYER FACING EAST");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - j, playerChunk.getZ() - i));
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + j, playerChunk.getZ() + i));
                                 }
                             }
                             break;
                         case SOUTH:
-                            Tribes.log(Level.INFO, "PLAYER FACING SOUTH");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
                                     toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() + j));
@@ -378,10 +375,9 @@ public class TribesCmd extends TribeCommand {
                             }
                             break;
                         case WEST:
-                            Tribes.log(Level.INFO, "PLAYER FACING WEST");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() + j));
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() - j));
                                 }
                             }
                             break;
@@ -438,37 +434,10 @@ public class TribesCmd extends TribeCommand {
                     if(d == null)
                         return true;
 
-                    switch(d) {
-                        case NORTH:
-                            for(int i = -dir; i <= dir; i++) {
-                                for(int j = -dir; j <= dir; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
-                                }
-                            }
-                            break;
-                        case EAST:
-                            for(int i = -dir; i <= dir; i++) {
-                                for(int j = -dir; j <= dir; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() + j));
-                                }
-                            }
-                            break;
-                        case SOUTH:
-                            for(int i = -dir; i <= dir; i++) {
-                                for(int j = -dir; j <= dir; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() + j));
-                                }
-                            }
-                            break;
-                        case WEST:
-                            for(int i = -dir; i <= dir; i++) {
-                                for(int j = -dir; j <= dir; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() - j));
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                    for(int i = -dir; i <= dir; i++) {
+                        for(int j = -dir; j <= dir; j++) {
+                            toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
+                        }
                     }
 
                     List<Chunk> fin = new ArrayList<>();
