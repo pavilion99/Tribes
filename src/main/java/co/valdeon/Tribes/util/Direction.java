@@ -59,22 +59,18 @@ public enum Direction {
     }
 
     public static Direction getCardinalFromYaw(Location l) {
-        double rotation = (l.getYaw() - 90) % 360;
-
-        if (rotation < 0) {
-            rotation += 360.0;
-        }
+        double rotation = l.getYaw();
 
         if (0 <= rotation && rotation < 45)
-            return NORTH;
-        else if (45 <= rotation && rotation < 135)
-            return EAST;
-        else if (135 <= rotation && rotation < 225)
             return SOUTH;
-        else if (225 <= rotation && rotation < 315)
+        else if (45 <= rotation && rotation < 135)
             return WEST;
-        else if (315 <= rotation && rotation < 360)
+        else if (135 <= rotation && rotation < 225)
             return NORTH;
+        else if (225 <= rotation && rotation < 315)
+            return EAST;
+        else if (315 <= rotation && rotation < 360)
+            return SOUTH;
         else
             return null;
     }
