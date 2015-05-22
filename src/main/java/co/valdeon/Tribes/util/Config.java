@@ -79,6 +79,9 @@ public class Config {
     public static String enteringTerritory;
     public static String enteringNoTerritory;
     public static String errBuild;
+    public static String maxRadius;
+    public static String claim;
+    public static String claimFail;
 
     public static boolean chatFeatures;
     public static boolean debugQueries;
@@ -155,6 +158,9 @@ public class Config {
         enteringNoTerritory = (String)get(String.class, "enteringNoTerritory");
         errBuild = (String)get(String.class, "errBuild");
         debugQueries = (boolean)get(boolean.class, "debugQueries");
+        maxRadius = (String)get(String.class, "maxRadius");
+        claim = (String)get(String.class, "claim");
+        claimFail = (String)get(String.class, "claimFail");
     }
 
     public static Object get(Class c, String path) {

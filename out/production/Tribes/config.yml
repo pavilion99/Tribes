@@ -146,6 +146,9 @@ enteringTerritory: '{0}Entering territory owned by {1}{2}{0}.'
 # Sent when a player enters unclaimed territory.
 enteringNoTerritory: '&8Unclaimed Territory'
 
+# Sent when a player claims land
+claim: '{0}Claimed {1}{2}{0} chunks (already owned: {1}{3}{0}, owned by other tribes: {1}{4}{0})'
+
 # ------ Error Messages ------ #
 
 # Sent when a tribe doesn't exist.
@@ -218,6 +221,12 @@ oneChief: 'There can be only one chief in a tribe.  Use /t setchief.'
 
 # Sent when a player builds in a territory in which they are not allowed to build
 errBuild: 'You aren''t allowed to build in this faction''s territory.'
+
+# Sent when a player tries to claim more land than available based on this radius.
+maxRadius: 'You can''t claim more than a 5 block radius.'
+
+# Sent when a player claims and the claim fails at some point due to lack of ability to claim more land
+claimFail: 'You ran out of claimable chunks while claiming this land.'
 
 
 # ------ Prices ------ #

@@ -349,10 +349,12 @@ public class TribesCmd extends TribeCommand {
 
                     Chunk playerChunk = ((Player)sender).getLocation().getChunk();
 
-                    toClaim.add(playerChunk);
+                    if(d == null)
+                        return true;
 
                     switch(d) {
                         case NORTH:
+                            Tribes.log(Level.INFO, "PLAYER FACING NORTH");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
                                     toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
@@ -360,13 +362,15 @@ public class TribesCmd extends TribeCommand {
                             }
                             break;
                         case EAST:
+                            Tribes.log(Level.INFO, "PLAYER FACING EAST");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
-                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + j, playerChunk.getZ() + i));
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - j, playerChunk.getZ() - i));
                                 }
                             }
                             break;
                         case SOUTH:
+                            Tribes.log(Level.INFO, "PLAYER FACING SOUTH");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
                                     toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() + j));
@@ -374,6 +378,7 @@ public class TribesCmd extends TribeCommand {
                             }
                             break;
                         case WEST:
+                            Tribes.log(Level.INFO, "PLAYER FACING WEST");
                             for(int i = -dir1; i <= dir2; i++) {
                                 for(int j = -dir1; j <= dir2; j++) {
                                     toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() + j));
@@ -390,9 +395,16 @@ public class TribesCmd extends TribeCommand {
                     int alreadyOwned = 0;
                     int ownedByOthers = 0;
 
+                    boolean broke = false;
+
                     Chunk[] finArr = toClaim.toArray(new Chunk[1]);
 
                     for(int i = 0; i < finArr.length; i++) {
+                        if(TribeLoader.ownedChunks.get(th).size() + (counter) >= th.getTier().getChunks()) {
+                            broke = true;
+                            break;
+                        }
+
                         if(TribeLoader.getChunkOwner(finArr[i]) == null) {
                             fin.add(finArr[i]);
                             counter++;
@@ -401,22 +413,99 @@ public class TribesCmd extends TribeCommand {
                         } else if(TribeLoader.getChunkOwner(finArr[i]).equals(th)) {
                             alreadyOwned++;
                         }
-
-                        if((i + 1) > th.getTier().getChunks()) {
-                            Message.message(sender, err(), Config.noMoreLand);
-                            break;
-                        }
                     }
 
-                    for(Chunk chonk : finArr) {
+                    for(Chunk chonk : fin) {
                         th.addChunk(chonk);
                     }
 
                     th.push();
 
+                    Message.message(sender, Message.format(Config.claim, Config.colorOne, Config.colorTwo, Integer.toString(counter), Integer.toString(alreadyOwned), Integer.toString(ownedByOthers)));
+                    if(broke)
+                        Message.message(sender, err(), Config.claimFail);
 
                 } else {
+                    int realRadius = radius - 1; // 3
 
+                    Direction d = Direction.getCardinalFromYaw(((Player) sender).getLocation());
+
+                    int dir = realRadius/2;
+                    List<Chunk> toClaim = new ArrayList<>();
+
+                    Chunk playerChunk = ((Player)sender).getLocation().getChunk();
+
+                    if(d == null)
+                        return true;
+
+                    switch(d) {
+                        case NORTH:
+                            for(int i = -dir; i <= dir; i++) {
+                                for(int j = -dir; j <= dir; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() - j));
+                                }
+                            }
+                            break;
+                        case EAST:
+                            for(int i = -dir; i <= dir; i++) {
+                                for(int j = -dir; j <= dir; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() + i, playerChunk.getZ() + j));
+                                }
+                            }
+                            break;
+                        case SOUTH:
+                            for(int i = -dir; i <= dir; i++) {
+                                for(int j = -dir; j <= dir; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() + j));
+                                }
+                            }
+                            break;
+                        case WEST:
+                            for(int i = -dir; i <= dir; i++) {
+                                for(int j = -dir; j <= dir; j++) {
+                                    toClaim.add(((Player)sender).getWorld().getChunkAt(playerChunk.getX() - i, playerChunk.getZ() - j));
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    List<Chunk> fin = new ArrayList<>();
+
+                    int counter = 0;
+                    int alreadyOwned = 0;
+                    int ownedByOthers = 0;
+
+                    boolean broke = false;
+
+                    Chunk[] finArr = toClaim.toArray(new Chunk[1]);
+
+                    for(int i = 0; i < finArr.length; i++) {
+                        if(TribeLoader.ownedChunks.get(th).size() + (counter) >= th.getTier().getChunks()) {
+                            broke = true;
+                            break;
+                        }
+
+                        if(TribeLoader.getChunkOwner(finArr[i]) == null) {
+                            fin.add(finArr[i]);
+                            counter++;
+                        } else if(!TribeLoader.getChunkOwner(finArr[i]).equals(th)) {
+                            ownedByOthers++;
+                        } else if(TribeLoader.getChunkOwner(finArr[i]).equals(th)) {
+                            alreadyOwned++;
+                        }
+                    }
+
+                    for(Chunk chonk : fin) {
+                        th.addChunk(chonk);
+                    }
+
+                    th.push();
+
+                    Message.message(sender, Message.format(Config.claim, Config.colorOne, Config.colorTwo, Integer.toString(counter), Integer.toString(alreadyOwned), Integer.toString(ownedByOthers)));
+                    if(broke)
+                        Message.message(sender, err(), Config.claimFail);
                 }
 
                 break;
