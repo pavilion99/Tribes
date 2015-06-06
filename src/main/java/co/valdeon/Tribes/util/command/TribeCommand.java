@@ -9,7 +9,7 @@ public abstract class TribeCommand implements CommandExecutor {
 
     protected Tribes tribes;
 
-    public TribeCommand(Tribes t) {
+    protected TribeCommand(Tribes t) {
         this.tribes = t;
     }
 
@@ -17,6 +17,6 @@ public abstract class TribeCommand implements CommandExecutor {
         return execute(sender, args, tribes);
     }
 
-    public abstract boolean execute(CommandSender sender, String[] args, Tribes tribes);
+    protected abstract boolean execute(CommandSender sender, String[] args, Tribes tribes);
 
 }

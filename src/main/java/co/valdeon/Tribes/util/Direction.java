@@ -1,7 +1,6 @@
 package co.valdeon.Tribes.util;
 
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public enum Direction {
@@ -15,7 +14,7 @@ public enum Direction {
     SOUTHWEST("SW"),
     SOUTHEAST("SE");
 
-    String symbol;
+    final String symbol;
 
     Direction(String s) {
         this.symbol = s;

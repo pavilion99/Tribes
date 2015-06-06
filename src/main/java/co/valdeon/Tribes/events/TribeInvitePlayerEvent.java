@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 
 public class TribeInvitePlayerEvent extends TribesEventCancellable {
 
-    private Player inviter;
-    private OfflinePlayer invitee;
-    private Tribe tribe;
+    private final Player inviter;
+    private final OfflinePlayer invitee;
+    private final Tribe tribe;
 
     public TribeInvitePlayerEvent(Player inviter, OfflinePlayer invitee, Tribe tribe) {
         this.inviter = inviter;

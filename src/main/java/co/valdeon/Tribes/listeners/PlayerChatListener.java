@@ -17,7 +17,7 @@ public class PlayerChatListener implements Listener {
         String formatWithTribe = "<tribe> <%s> %s";
         String formatWithoutTribe = "<%s> %s";
 
-        String tribe = "";
+        String tribe;
         Tribe t = TribeLoader.getTribe(e.getPlayer());
         if(!(t == null)) {
             tribe = t.getName();

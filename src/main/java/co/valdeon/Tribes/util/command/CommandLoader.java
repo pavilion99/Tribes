@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommandLoader {
 
-    public static BiMap<Class, String> executors = new BiMap<>();
+    public static final BiMap<Class, String> executors = new BiMap<>();
 
     public static final List<PluginCommand> cmds = new ArrayList<>();
 

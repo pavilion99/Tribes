@@ -3,13 +3,12 @@ package co.valdeon.Tribes.schedules;
 import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.storage.Query;
 import co.valdeon.Tribes.storage.QueryType;
-import co.valdeon.Tribes.storage.Set;
 import co.valdeon.Tribes.storage.WhereType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeleteTribe extends BukkitRunnable {
 
-    private Tribe t;
+    private final Tribe t;
 
     public DeleteTribe(Tribe t) {
         this.t = t;

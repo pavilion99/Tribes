@@ -2,6 +2,7 @@ package co.valdeon.Tribes.components.abilities;
 
 import co.valdeon.Tribes.components.Ability;
 import co.valdeon.Tribes.components.AbilityType;
+import co.valdeon.Tribes.components.Tribe;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -22,7 +23,13 @@ public class AbilityFireResistance extends Ability {
         }
 
         AbilityType b = null;
-        for(AbilityType ba : TribeLoader.getTribe(this.p).getAbilities()) {
+
+        Tribe tee = TribeLoader.getTribe(this.p);
+
+        if(tee == null)
+            return;
+
+        for(AbilityType ba : tee.getAbilities()) {
             if(ba.getText().equals(AbilityType.FIRERESISTANCE.getText())) {
                 b = ba;
             }

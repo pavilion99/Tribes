@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 
 public class TribeKickPlayerEvent extends TribesEventCancellable {
 
-    private Player kicker;
-    private OfflinePlayer kickee;
-    private Tribe tribe;
+    private final Player kicker;
+    private final OfflinePlayer kickee;
+    private final Tribe tribe;
 
     public TribeKickPlayerEvent(Player kicker, OfflinePlayer kickee, Tribe tribe) {
         this.kicker = kicker;

@@ -6,8 +6,8 @@ public enum TribeRank {
     OFFICER(2, "OFFICER"),
     CHIEF(3, "CHIEF");
 
-    int power;
-    String name;
+    final int power;
+    final String name;
 
     TribeRank(int power, String name) {
         this.power = power;

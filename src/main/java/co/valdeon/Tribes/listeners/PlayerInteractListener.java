@@ -6,14 +6,13 @@ import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Chunk;
-import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractListener implements Listener {
+class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void leftClick(PlayerInteractEvent e) {

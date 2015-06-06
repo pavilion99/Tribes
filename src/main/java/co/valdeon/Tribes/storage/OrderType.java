@@ -5,7 +5,7 @@ public enum OrderType {
     ASC("ASC"),
     DESC("DESC");
 
-    String val;
+    final String val;
 
     OrderType(String val) {
         this.val = val;

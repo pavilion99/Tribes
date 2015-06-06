@@ -13,11 +13,10 @@ import java.util.logging.Level;
 public class Query implements Closeable {
 
     private String query;
-    private Database db;
-    private QueryType q;
+    private final Database db;
+    private final QueryType q;
     private Connection con;
     private ResultSet result;
-    private Statement s;
 
     public Query (QueryType q, String... s) {
         this.q = q;
@@ -98,6 +97,8 @@ public class Query implements Closeable {
 
         if(this.query == null)
             return null;
+
+        Statement s;
 
         try {
             s = this.con.createStatement();

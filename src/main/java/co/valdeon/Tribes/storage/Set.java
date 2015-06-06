@@ -2,8 +2,8 @@ package co.valdeon.Tribes.storage;
 
 public class Set {
 
-    private String column;
-    private String value;
+    private final String column;
+    private final String value;
 
     public Set(String s, String t) {
         this.column = s;

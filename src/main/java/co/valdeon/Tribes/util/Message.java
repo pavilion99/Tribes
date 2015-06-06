@@ -3,7 +3,6 @@ package co.valdeon.Tribes.util;
 import co.valdeon.Tribes.commands.TribesCmd;
 import co.valdeon.Tribes.util.command.CommandLoader;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,7 +11,7 @@ import java.util.HashMap;
 
 public class Message {
 
-    public static HashMap<Class, String> invalidArgsMappings = new HashMap<>();
+    private static final HashMap<Class, String> invalidArgsMappings = new HashMap<>();
 
     public static void message(Player s, String... params) {
         String message = "";

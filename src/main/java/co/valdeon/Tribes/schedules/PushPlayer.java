@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PushPlayer extends BukkitRunnable {
 
-    private Query q;
+    private final Query q;
     private boolean setID = false;
 
     public PushPlayer(Query q) {

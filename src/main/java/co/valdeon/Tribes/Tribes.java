@@ -2,7 +2,6 @@ package co.valdeon.Tribes;
 
 import co.valdeon.Tribes.commands.TribesCmd;
 import co.valdeon.Tribes.components.Tribe;
-import co.valdeon.Tribes.events.TribeEarnCoinsEvent;
 import co.valdeon.Tribes.hooks.VaultHook;
 import co.valdeon.Tribes.listeners.*;
 import co.valdeon.Tribes.schedules.PushTribesSchedule;
@@ -22,11 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +31,6 @@ public class Tribes extends JavaPlugin {
     private static Database db;
     private static File dDir;
     private static Economy econ;
-    private static List<BukkitTask> tasks = new ArrayList<>();
     private static Logger log;
 
     @Override
@@ -73,7 +67,7 @@ public class Tribes extends JavaPlugin {
         }
     }
 
-    public void registerListeners() {
+    private void registerListeners() {
         getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getPluginManager().registerEvents(new TribeEarnCoinsListener(), this);
         getPluginManager().registerEvents(new TribeInvitePlayerListener(), this);
@@ -84,7 +78,7 @@ public class Tribes extends JavaPlugin {
         getPluginManager().registerEvents(new PlayerMoveListener(this), this);
     }
 
-    public void registerCommands() {
+    private void registerCommands() {
         CommandLoader.init(this);
         Message.init();
 
@@ -93,12 +87,12 @@ public class Tribes extends JavaPlugin {
         }
     }
 
-    public void loadSchedules() {
-        tasks.add(new PushTribesSchedule().runTaskTimerAsynchronously(this, 0, Config.saveFrequency * 60 * 20));
+    private void loadSchedules() {
+        new PushTribesSchedule().runTaskTimerAsynchronously(this, 0, Config.saveFrequency * 60 * 20);
         getLogger().info("Saving to database automatically every " + Config.saveFrequency + " minutes.");
     }
 
-    public void load() {
+    private void load() {
         saveDefaultConfig();
 
         for(Player p : Bukkit.getOnlinePlayers()) {

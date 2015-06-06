@@ -196,10 +196,6 @@ public class Database {
 
                 int tribeId = r.getInt("tribe");
 
-                String role = r.getString("role");
-
-                int id = r.getInt("id");
-
                 if(!dbName.equals(playerName))
                     new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("name", "'" + playerName + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'"), true);
 
@@ -210,11 +206,8 @@ public class Database {
                 Query qa = new Query(QueryType.INSERTINTO, "`users`").columns("uuid", "name").values("'" + uuid + "'", "'" + playerName + "'");
                 ResultSet ra = qa.query(true);
 
-                int id = 0;
-
                 try {
-                    if(ra.next())
-                        id = ra.getInt(1);
+                    ra.next();
                 } catch(NullPointerException e) {
                     Tribes.log(Level.WARNING, "Failed to insert player with uuid " + uuid + " and name " + playerName + " into the database");
                     e.printStackTrace();

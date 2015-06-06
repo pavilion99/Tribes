@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PushTribe extends BukkitRunnable {
 
-    private Tribe t;
+    private final Tribe t;
 
     public PushTribe(Tribe t) {
         this.t = t;

@@ -8,7 +8,6 @@ import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class PlayerMoveListener implements Listener {
 
-    private Tribes tribes;
+    private final Tribes tribes;
 
     public PlayerMoveListener(Tribes t) {
         this.tribes = t;

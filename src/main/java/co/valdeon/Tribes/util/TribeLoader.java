@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public abstract class TribeLoader {
 
-    public static List<Tribe> tribesList = new ArrayList<>();
-    public static HashMap<Tribe, List<Chunk>> ownedChunks = new HashMap<>();
+    public static final List<Tribe> tribesList = new ArrayList<>();
+    public static final HashMap<Tribe, List<Chunk>> ownedChunks = new HashMap<>();
 
     private static Tribes t;
 
@@ -24,6 +25,9 @@ public abstract class TribeLoader {
         HashMap<String, HashMap<String, Object>> listTribes = Database.getTribes();
 
         int g = 0;
+
+        if(listTribes == null)
+            return;
 
         for(String s : listTribes.keySet()) {
             HashMap<String, Object> data = listTribes.get(s);
@@ -91,23 +95,6 @@ public abstract class TribeLoader {
             }
         }
         return null;
-    }
-
-    public static int getAllowedChunks(Tribe t) {
-        switch(t.getTier().getValue()) {
-            case 1:
-                return Config.tierOneChunks;
-            case 2:
-                return Config.tierTwoChunks;
-            case 3:
-                return Config.tierThreeChunks;
-            case 4:
-                return Config.tierFourChunks;
-            case 5:
-                return Config.tierFiveChunks;
-            default:
-                return Config.tierOneChunks;
-        }
     }
 
     public static Tribes getTribes() {

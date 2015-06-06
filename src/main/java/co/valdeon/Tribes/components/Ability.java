@@ -8,11 +8,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class Ability extends BukkitRunnable {
 
-    protected Player p;
+    protected final Player p;
     protected int multi;
-    protected String string;
+    private final String string;
 
-    public Ability(Player p, int i, String s) {
+    protected Ability(Player p, int i, String s) {
         this.p = p;
         this.multi = i;
         this.string = s;

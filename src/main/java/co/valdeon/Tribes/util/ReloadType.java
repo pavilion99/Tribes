@@ -10,7 +10,7 @@ public enum ReloadType {
         this.s = s;
     }
 
-    private String s;
+    private final String s;
 
     public static ReloadType getTypeFromString(String s) {
         String string = s.toUpperCase();

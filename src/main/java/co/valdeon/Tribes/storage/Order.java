@@ -1,9 +1,9 @@
 package co.valdeon.Tribes.storage;
 
-public class Order {
+class Order {
 
-    private OrderType type;
-    private String by;
+    private final OrderType type;
+    private final String by;
 
     public Order(OrderType a, String by) {
         this.type = a;

@@ -82,6 +82,8 @@ public class Config {
     public static String maxRadius;
     public static String claim;
     public static String claimFail;
+    public static String unclaim;
+    public static String homeNotSet;
 
     public static boolean chatFeatures;
     public static boolean debugQueries;
@@ -161,6 +163,8 @@ public class Config {
         maxRadius = (String)get(String.class, "maxRadius");
         claim = (String)get(String.class, "claim");
         claimFail = (String)get(String.class, "claimFail");
+        unclaim = (String)get(String.class, "unclaim");
+        homeNotSet = (String)get(String.class, "homeNotSet");
     }
 
     public static Object get(Class c, String path) {
@@ -181,7 +185,7 @@ public class Config {
 
         public static int fireResistance, haste, healthBoost, invisibility, jump, nightVision, regen, resistance, saturation, speed, strength, waterBreathing;
 
-        private static HashMap<String, Integer> priceMap = new HashMap<>();
+        private static final HashMap<String, Integer> priceMap = new HashMap<>();
 
         public void init() {
             fireResistance = (int)get(int.class, "fireResistance");

@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 
 public class TribeEarnCoinsEvent extends TribesEventCancellable {
 
-    private int amount;
-    private Tribe tribe;
-    private Player p;
+    private final int amount;
+    private final Tribe tribe;
+    private final Player p;
 
     public TribeEarnCoinsEvent(int amount, Tribe tribe, Player p) {
         this.amount = amount;

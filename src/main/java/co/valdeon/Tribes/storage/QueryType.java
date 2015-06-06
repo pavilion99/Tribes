@@ -9,7 +9,7 @@ public enum QueryType {
     INSERTINTO("INSERT INTO"),
     INSERT("INSERT");
 
-    String val;
+    final String val;
 
     QueryType(String s) {
         this.val = s;

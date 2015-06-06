@@ -15,7 +15,7 @@ public enum AbilityType {
     SATURATION("SATURATION"),
     WATERBREATHING("WATERBREATHING");
 
-    String text;
+    final String text;
     int multiplier = 0;
 
     AbilityType(String s) {

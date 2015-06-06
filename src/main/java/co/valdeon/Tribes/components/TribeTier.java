@@ -10,8 +10,9 @@ public enum TribeTier {
     TIER_FOUR(4, Config.tierFourChunks, "FOUR"),
     TIER_FIVE(5, Config.tierFiveChunks, "FIVE");
 
-    public int tier, chunks;
-    public String tierString;
+    private final int tier;
+    private final int chunks;
+    public final String tierString;
 
     TribeTier(int tier, int chunks, String tierString) {
         this.tier = tier;

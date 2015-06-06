@@ -3,18 +3,14 @@ package co.valdeon.Tribes.components;
 import co.valdeon.Tribes.Tribes;
 import co.valdeon.Tribes.components.abilities.*;
 import co.valdeon.Tribes.schedules.PushTribe;
-import co.valdeon.Tribes.schedules.PushTribesSchedule;
 import co.valdeon.Tribes.storage.*;
 import co.valdeon.Tribes.util.Config;
 import co.valdeon.Tribes.util.Message;
 import co.valdeon.Tribes.util.TribeLoader;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +18,7 @@ import java.util.List;
 public class Tribe {
 
     private int id;
-    private String name;
+    private final String name;
     private TribeTier tier;
     private HashMap<OfflinePlayer, TribeRank> members = new HashMap<>();
     private int coins;
@@ -65,12 +61,10 @@ public class Tribe {
         return this.members;
     }
 
-    public boolean addMember(OfflinePlayer p) {
+    public void addMember(OfflinePlayer p) {
         if(!this.members.keySet().contains(p)) {
             this.members.put(p, TribeRank.MEMBER);
-            return true;
         }
-        return false;
     }
 
     public void removeMember(OfflinePlayer p) {
@@ -171,6 +165,11 @@ public class Tribe {
         return this;
     }
 
+    public Tribe removeChunk(Chunk t) {
+        TribeLoader.ownedChunks.get(this).remove(t);
+        return this;
+    }
+
     public Tribe kick(OfflinePlayer p) {
         if(!this.members.keySet().contains(p)) {
             return this;
@@ -259,7 +258,7 @@ public class Tribe {
         return this;
     }
 
-    public void updatePlayerAbilities(AbilityType a, Tribes t) {
+    private void updatePlayerAbilities(AbilityType a, Tribes t) {
         for(OfflinePlayer p : this.getMembers().keySet()) {
             if(p.isOnline()) {
                 switch (a) {
