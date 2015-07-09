@@ -32,6 +32,7 @@ class TribesClaimCmd {
 
         if(radius > 5) {
             Message.message(sender, TribesCmd.err(), Config.maxRadius);
+            return;
         }
 
         if (TribeLoader.getTribe((Player) sender) == null) {
@@ -48,6 +49,8 @@ class TribesClaimCmd {
 
         if(tr == null)
             return;
+
+        Message.message(sender, TribesCmd.err(), "Made it here.");
 
         if (!(tr.getPower() >= 2)) {
             Message.message(sender, TribesCmd.err(), Config.noPower);
@@ -152,6 +155,8 @@ class TribesClaimCmd {
 
             if(d == null)
                 return;
+
+            Message.message(sender, TribesCmd.err(), "D isn't null");
 
             for(int i = -dir; i <= dir; i++) {
                 for(int j = -dir; j <= dir; j++) {

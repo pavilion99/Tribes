@@ -9,7 +9,7 @@ import org.bukkit.command.ConsoleCommandSender;
 
 public class TribesCmd extends TribeCommand {
 
-    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability", "removeability", "i", "unclaim"};
+    private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability", "removeability", "i", "unclaim", "map"};
 
     public TribesCmd(Tribes t) {
         super(t);
@@ -97,47 +97,71 @@ public class TribesCmd extends TribeCommand {
         switch(s) {
             case "create":
                 new TribesCreateCmd().execute(sender, args);
+                break;
             case "invite":
                 new TribesInviteCmd().execute(sender, args);
+                break;
             case "kick":
                 new TribesKickCmd().execute(sender, args);
+                break;
             case "destroy":
                 new TribesDestroyCmd().execute(sender, args);
+                break;
             case "coins":
                 new TribesCoinsCmd().execute(sender, args);
+                break;
             case "join":
                 new TribesJoinCmd().execute(sender, args);
+                break;
             case "i":
             case "info":
                 new TribesInfoCmd().execute(sender, args);
+                break;
             case "claim":
                 new TribesClaimCmd().execute(sender, args);
+                break;
             case "unclaim":
                 new TribesUnclaimCmd().execute(sender, args);
+                break;
             case "list":
                 new TribesListCmd().execute(sender, args);
+                break;
             case "reload":
-                 new TribesReloadCmd(tribes).execute(sender, args);
+                new TribesReloadCmd(tribes).execute(sender, args);
+                break;
             case "upgrade":
-                 new TribesUpgradeCmd().execute(sender, args);
+                new TribesUpgradeCmd().execute(sender, args);
+                break;
             case "ability":
-                 new TribesAbilityCmd(tribes).execute(sender, args);
+                new TribesAbilityCmd(tribes).execute(sender, args);
+                break;
             case "home":
-                 new TribesHomeCmd().execute(sender, args);
+                new TribesHomeCmd().execute(sender, args);
+                break;
             case "sethome":
-                 new TribesSethomeCmd().execute(sender, args);
+                new TribesSethomeCmd().execute(sender, args);
+                break;
             case "getcoins":
-                 new TribesGetcoinsCmd().execute(sender, args);
+                new TribesGetcoinsCmd().execute(sender, args);
+                break;
             case "leave":
-                 new TribesLeaveCmd().execute(sender, args);
+                new TribesLeaveCmd().execute(sender, args);
+                break;
             case "members":
-                 new TribesMembersCmd().execute(sender, args);
+                new TribesMembersCmd().execute(sender, args);
+                break;
             case "promote":
-                 new TribesPromoteCmd().execute(sender, args);
+                new TribesPromoteCmd().execute(sender, args);
+                break;
             case "setchief":
-                 new TribesSetchiefCmd().execute(sender, args);
+                new TribesSetchiefCmd().execute(sender, args);
+                break;
             case "removeability":
-                 new TribesRemoveabilityCmd().execute(sender, args);
+                new TribesRemoveabilityCmd().execute(sender, args);
+                break;
+            case "map":
+                new TribesMapCmd().execute(sender, args);
+                break;
             default:
                 Message.messageInvalidArgs(sender, this.getClass());
                 break;

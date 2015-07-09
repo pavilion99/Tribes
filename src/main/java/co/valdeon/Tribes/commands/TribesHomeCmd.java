@@ -24,6 +24,7 @@ class TribesHomeCmd {
 
         if(t.getHome() == null) {
             Message.message(sender, TribesCmd.err(), Config.homeNotSet);
+            return;
         }
 
         ((Player)sender).teleport(t.getHome());
