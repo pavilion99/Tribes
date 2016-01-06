@@ -2,7 +2,7 @@ name: Tribes
 version: 1.0.0
 description: Tribes is a plugin used to bring people together to fight for their community.
 author: pavilion99
-main: co.valdeon.Tribes.Tribes
+main: Tribes
 database: true
 softdepend: [Vault]
 commands:
