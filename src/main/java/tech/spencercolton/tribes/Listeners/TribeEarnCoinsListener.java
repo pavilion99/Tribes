@@ -1,5 +1,6 @@
 package tech.spencercolton.tribes.Listeners;
 
+import org.bukkit.OfflinePlayer;
 import tech.spencercolton.tribes.Events.TribeEarnCoinsEvent;
 import tech.spencercolton.tribes.Util.Config;
 import tech.spencercolton.tribes.Util.Message;
