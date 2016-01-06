@@ -16,12 +16,7 @@ import java.util.List;
 
 public class PlayerMoveListener implements Listener {
 
-    private final Tribes tribes;
-
-    public PlayerMoveListener(Tribes t) {
-        this.tribes = t;
-    }
-
+    @SuppressWarnings("unused")
     @EventHandler
     public void onEvent(PlayerMoveEvent e) {
         Tribe t = TribeLoader.getChunkOwner(Bukkit.getWorld(Config.world).getChunkAt(e.getTo()));
@@ -35,40 +30,40 @@ public class PlayerMoveListener implements Listener {
             for(AbilityType g : a) {
                 switch(g.getText()) {
                     case "SPEED":
-                        new AbilitySpeed(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilitySpeed(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "JUMP":
-                        new AbilityJump(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityJump(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "REGEN":
-                        new AbilityRegen(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityRegen(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "FIRERESISTANCE":
-                        new AbilityFireResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityFireResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "HASTE":
-                        new AbilityHaste(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityHaste(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "HEALTHBOOST":
-                        new AbilityHealthBoost(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityHealthBoost(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "INVISIBILITY":
-                        new AbilityInvisibility(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityInvisibility(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "NIGHTVISION":
-                        new AbilityNightVision(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityNightVision(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "RESISTANCE":
-                        new AbilityResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityResistance(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "SATURATION":
-                        new AbilitySaturation(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilitySaturation(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "STRENGTH":
-                        new AbilityStrength(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityStrength(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     case "WATERBREATHING":
-                        new AbilityWaterBreathing(e.getPlayer(), g.getMultiplier()).runTaskTimer(this.tribes, 0, 20);
+                        new AbilityWaterBreathing(e.getPlayer(), g.getMultiplier()).runTaskTimer(Tribes.getInstance(), 0, 20);
                         break;
                     default:
                         break;
@@ -77,6 +72,7 @@ public class PlayerMoveListener implements Listener {
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void announceTribe(PlayerMoveEvent e) {
         Tribe t = TribeLoader.getChunkOwner(e.getTo().getChunk());

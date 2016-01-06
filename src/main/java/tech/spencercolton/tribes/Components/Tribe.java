@@ -30,7 +30,7 @@ public class Tribe {
         this.name = name;
         this.tier = TribeTier.TIER_ONE;
         this.members.put(creator, TribeRank.CHIEF);
-        TribeLoader.ownedChunks.put(this, new ArrayList<Chunk>());
+        TribeLoader.ownedChunks.put(this, new ArrayList<>());
     }
 
     public Tribe(String name, int id, HashMap<OfflinePlayer, TribeRank> members, List<Chunk> ownedChunks, int coins, List<OfflinePlayer> invitees, TribeTier tier, List<AbilityType> abilities, Location home) {
@@ -116,14 +116,11 @@ public class Tribe {
         return this;
     }
 
-    public void setCoins(int a) {
-        this.coins = a;
-    }
-
     public TribeRank getRank(OfflinePlayer p) {
         return this.getMembers().get(p);
     }
 
+    @SuppressWarnings("unused")
     public List<OfflinePlayer> getInvitees() {
         return this.invitees;
     }
@@ -142,6 +139,7 @@ public class Tribe {
         return fin;
     }
 
+    @SuppressWarnings("unused")
     public void invite(OfflinePlayer p) {
         this.invitees.add(p);
     }
@@ -152,6 +150,7 @@ public class Tribe {
 
     }
 
+    @SuppressWarnings("unused")
     public void join(OfflinePlayer p, TribeRank t){
         this.members.put(p, t);
     }

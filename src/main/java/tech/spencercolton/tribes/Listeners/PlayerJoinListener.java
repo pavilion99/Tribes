@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onEvent(PlayerJoinEvent e) {
         Database.loadPlayer(e.getPlayer());

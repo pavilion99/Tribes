@@ -12,8 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-class PlayerInteractListener implements Listener {
+public class PlayerInteractListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void leftClick(PlayerInteractEvent e) {
         Action a = e.getAction();
@@ -32,17 +33,21 @@ class PlayerInteractListener implements Listener {
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void rightClick(PlayerInteractEvent e) {
         Action a = e.getAction();
         if(a != Action.RIGHT_CLICK_BLOCK) {
+
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void physical(PlayerInteractEvent e) {
         Action a = e.getAction();
         if(a != Action.PHYSICAL) {
+
         }
     }
 

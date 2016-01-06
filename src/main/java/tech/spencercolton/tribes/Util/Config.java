@@ -4,6 +4,7 @@ import tech.spencercolton.tribes.Tribes;
 
 import java.util.HashMap;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Config {
 
     private static Tribes tribes;
@@ -181,6 +182,7 @@ public class Config {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class Prices {
 
         public static int fireResistance, haste, healthBoost, invisibility, jump, nightVision, regen, resistance, saturation, speed, strength, waterBreathing;

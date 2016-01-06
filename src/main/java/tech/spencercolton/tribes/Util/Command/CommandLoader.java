@@ -14,11 +14,11 @@ public class CommandLoader {
 
     public static final List<PluginCommand> cmds = new ArrayList<>();
 
-    public static void init(Tribes tribes) {
+    public static void init() {
         String[] listCmds = {"tribes"};
 
         for(String s : listCmds) {
-            cmds.add(tribes.getCommand(s));
+            cmds.add(Tribes.getInstance().getCommand(s));
         }
 
         initExecutors();

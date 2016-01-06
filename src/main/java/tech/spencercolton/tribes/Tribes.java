@@ -15,7 +15,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,16 +79,15 @@ public class Tribes extends JavaPlugin {
         getPluginManager().registerEvents(new TribeKickPlayerListener(), this);
         if(Config.chatFeatures)
             getPluginManager().registerEvents(new PlayerChatListener(), this);
-        getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+        getPluginManager().registerEvents(new PlayerMoveListener(), this);
+        getPluginManager().registerEvents(new PlayerInteractListener(), this);
     }
 
     private void registerCommands() {
-        CommandLoader.init(this);
+        CommandLoader.init();
         Message.init();
 
-        CommandLoader.cmds.stream().forEach(c -> {
-            c.setExecutor(new TribesCmd());
-        });
+        CommandLoader.cmds.stream().forEach(c -> c.setExecutor(new TribesCmd()));
         for(PluginCommand c : CommandLoader.cmds)
             c.setExecutor(new TribesCmd());
     }
@@ -101,10 +99,7 @@ public class Tribes extends JavaPlugin {
 
     private void load() {
         saveDefaultConfig();
-
-        for(Player p : Bukkit.getOnlinePlayers()) {
-            Database.loadPlayer(p);
-        }
+        Bukkit.getOnlinePlayers().forEach(Database::loadPlayer);
     }
 
     public PluginManager getPluginManager() {

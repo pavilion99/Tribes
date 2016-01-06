@@ -1,5 +1,8 @@
 package tech.spencercolton.tribes.Util;
 
+import lombok.Getter;
+
+@SuppressWarnings("unused")
 public enum ReloadType {
 
     NORMAL("normal"),
@@ -7,10 +10,11 @@ public enum ReloadType {
     LOAD_DATABASE("loadDatabase");
 
     ReloadType(String s) {
-        this.s = s;
+        this.text = s;
     }
 
-    private final String s;
+    @Getter
+    private final String text;
 
     @SuppressWarnings("unused")
     public static ReloadType getTypeFromString(String s) {
@@ -26,10 +30,6 @@ public enum ReloadType {
             default:
                 return null;
         }
-    }
-
-    public String getText() {
-        return this.s;
     }
 
 }

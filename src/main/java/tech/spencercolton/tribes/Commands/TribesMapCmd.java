@@ -15,7 +15,7 @@ import java.util.HashMap;
 @SuppressWarnings("UnusedParameters")
 class TribesMapCmd {
 
-    char currentColor;
+    private char currentColor;
 
     public void execute(CommandSender sender, String[] args) {
         this.currentColor = 0x0;

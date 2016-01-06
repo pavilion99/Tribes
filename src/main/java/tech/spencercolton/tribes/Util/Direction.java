@@ -22,6 +22,7 @@ public enum Direction {
         this.symbol = s;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static Direction getFromYaw(Location l) {
         double rotation = (l.getYaw() - 90) % 360;
 
@@ -51,7 +52,7 @@ public enum Direction {
             return null;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unused")
     public static Direction getFromYaw(Player p) {
         return getFromYaw(p.getLocation());
     }
@@ -73,7 +74,7 @@ public enum Direction {
             return null;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unused")
     public static Direction getCardinalFromYaw(Player p) {
         return getCardinalFromYaw(p.getLocation());
     }

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("unused")
 public class AbilityHaste extends Ability {
 
     public AbilityHaste(Player p, int i) {
@@ -39,11 +40,7 @@ public class AbilityHaste extends Ability {
             this.multi = b.getMultiplier();
         }
 
-        for(PotionEffect pe : this.p.getActivePotionEffects()) {
-            if(pe.getType().equals(PotionEffectType.FAST_DIGGING) && pe.getAmplifier() != this.multi) {
-                this.p.removePotionEffect(PotionEffectType.FAST_DIGGING);
-            }
-        }
+        this.p.getActivePotionEffects().stream().filter(pe -> pe.getType().equals(PotionEffectType.FAST_DIGGING) && pe.getAmplifier() != this.multi).forEach(pe -> this.p.removePotionEffect(PotionEffectType.FAST_DIGGING));
 
         this.p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 60 * 60 * 20, multi));
     }

@@ -8,6 +8,7 @@ import tech.spencercolton.tribes.Storage.SQLite.Query;
 import tech.spencercolton.tribes.Storage.SQLite.QueryType;
 import tech.spencercolton.tribes.Storage.SQLite.Set;
 import tech.spencercolton.tribes.Storage.SQLite.WhereType;
+import tech.spencercolton.tribes.Tribes;
 import tech.spencercolton.tribes.Util.Config;
 import tech.spencercolton.tribes.Util.Message;
 import tech.spencercolton.tribes.Util.TribeLoader;
@@ -37,7 +38,7 @@ class TribesDestroyCmd {
         TribeLoader.tribesList.remove(t);
         TribeLoader.ownedChunks.remove(t);
 
-        new DeleteTribe(t).runTaskAsynchronously(TribeLoader.getTribes());
+        new DeleteTribe(t).runTaskAsynchronously(Tribes.getInstance());
 
         new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", "0"), new Set("role", "''")).where("tribe", WhereType.EQUALS, Integer.toString(t.getId()))).runTaskAsynchronously(TribeLoader.getTribes());
 

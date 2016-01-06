@@ -11,12 +11,6 @@ import org.bukkit.entity.Player;
 
 class TribesAbilityCmd {
 
-    private final Tribes tribes;
-
-    public TribesAbilityCmd(Tribes t) {
-        this.tribes = t;
-    }
-
     public void execute(CommandSender sender, String[] args) {
         if(args.length != 2) {
             Message.message(sender, TribesCmd.err(), Config.invalidSubargs);
@@ -71,7 +65,7 @@ class TribesAbilityCmd {
             }
         }
 
-        t.addAbility(a, tribes);
+        t.addAbility(a, Tribes.getInstance());
         t.subtractCoins((int)price).push();
 
         Message.message(sender, Message.format(Config.buyAbility, Config.colorOne, Config.colorTwo, a.getText(), Integer.toString(a.getMultiplier() + 1), Integer.toString((int)price), Config.colorCoins));

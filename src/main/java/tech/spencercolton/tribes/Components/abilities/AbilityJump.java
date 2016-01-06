@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("unused")
 public class AbilityJump extends Ability {
 
     public AbilityJump(Player p, int i) {
@@ -39,11 +40,7 @@ public class AbilityJump extends Ability {
             this.multi = b.getMultiplier();
         }
 
-        for(PotionEffect pe : this.p.getActivePotionEffects()) {
-            if(pe.getType().equals(PotionEffectType.JUMP) && pe.getAmplifier() != this.multi) {
-                this.p.removePotionEffect(PotionEffectType.JUMP);
-            }
-        }
+        this.p.getActivePotionEffects().stream().filter(pe -> pe.getType().equals(PotionEffectType.JUMP) && pe.getAmplifier() != this.multi).forEach(pe -> this.p.removePotionEffect(PotionEffectType.JUMP));
 
         this.p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 60 * 60 * 20, multi));
     }

@@ -126,9 +126,7 @@ class TribesUnclaimCmd {
                 }
             }
 
-            for(Chunk chonk : fin) {
-                tha.removeChunk(chonk);
-            }
+            fin.forEach(tha::removeChunk);
 
             tha.push();
 
@@ -175,9 +173,7 @@ class TribesUnclaimCmd {
                 }
             }
 
-            for(Chunk chonk : fin) {
-                tha.removeChunk(chonk);
-            }
+            fin.forEach(tha::removeChunk);
 
             tha.push();
 

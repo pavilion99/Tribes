@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <entry_points version="2.0" />
+    <entry_points version="2.0">
+      <entry_point TYPE="method" FQNAME="tech.spencercolton.tribes.Schedules.PushPlayer PushPlayer(tech.spencercolton.tribes.Storage.SQLite.Query q, boolean b)" />
+      <entry_point TYPE="method" FQNAME="tech.spencercolton.tribes.Schedules.PushPlayer PushPlayer(tech.spencercolton.tribes.Storage.SQLite.Query q)" />
+      <entry_point TYPE="method" FQNAME="tech.spencercolton.tribes.Schedules.PushTribe PushTribe(tech.spencercolton.tribes.Components.Tribe t)" />
+      <entry_point TYPE="method" FQNAME="tech.spencercolton.tribes.Storage.SQLite.Set Set(java.lang.String s, java.lang.String t)" />
+      <entry_point TYPE="class" FQNAME="tech.spencercolton.tribes.Util.Command.TribeCommand" />
+    </entry_points>
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

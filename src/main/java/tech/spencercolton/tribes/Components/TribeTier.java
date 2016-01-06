@@ -24,6 +24,7 @@ public enum TribeTier {
         return this.tier;
     }
 
+    @SuppressWarnings("unused")
     public static TribeTier getTier(int i) {
         switch(i) {
             case 1:
@@ -71,6 +72,7 @@ public enum TribeTier {
         }
     }
 
+    @SuppressWarnings("unused")
     public static TribeTier getTierFromCoins(int coins) {
         if(coins >= 0 && coins <= 2)
             return TIER_ONE;

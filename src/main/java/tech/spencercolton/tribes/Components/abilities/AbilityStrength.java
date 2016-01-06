@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("unused")
 public class AbilityStrength extends Ability {
 
     public AbilityStrength(Player p, int i) {
@@ -39,11 +40,7 @@ public class AbilityStrength extends Ability {
             this.multi = b.getMultiplier();
         }
 
-        for(PotionEffect pe : this.p.getActivePotionEffects()) {
-            if(pe.getType().equals(PotionEffectType.INCREASE_DAMAGE) && pe.getAmplifier() != this.multi) {
-                this.p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-            }
-        }
+        this.p.getActivePotionEffects().stream().filter(pe -> pe.getType().equals(PotionEffectType.INCREASE_DAMAGE) && pe.getAmplifier() != this.multi).forEach(pe -> this.p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE));
 
         this.p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 60 * 60 * 20, multi));
     }

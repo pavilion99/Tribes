@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 
 public class TribeKickPlayerListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onEvent(TribeKickPlayerEvent e) {
         if(e.isCancelled())

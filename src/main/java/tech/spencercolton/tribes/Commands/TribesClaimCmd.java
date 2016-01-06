@@ -133,9 +133,7 @@ class TribesClaimCmd {
                 }
             }
 
-            for(Chunk chonk : fin) {
-                t.addChunk(chonk);
-            }
+            fin.forEach(t::addChunk);
 
             t.push();
 
@@ -192,9 +190,7 @@ class TribesClaimCmd {
                 }
             }
 
-            for(Chunk chonk : fin) {
-                t.addChunk(chonk);
-            }
+            fin.forEach(t::addChunk);
 
             t.push();
 

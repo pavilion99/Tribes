@@ -229,14 +229,14 @@ public class Database {
         int id = t.getId();
         String rank = r.getName();
 
-        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "'" + rank + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(TribeLoader.getTribes());
+        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "'" + rank + "'")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(Tribes.getInstance());
     }
 
     public static void setPlayerMemberOfNoTribe(Player p) {
         String uuid = p.getUniqueId().toString();
         int id = 0;
 
-        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "''")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(TribeLoader.getTribes());
+        new PushPlayer(new Query(QueryType.UPDATE, "`users`").set(new Set("tribe", Integer.toString(id)), new Set("role", "''")).where("uuid", WhereType.EQUALS, "'" + uuid + "'")).runTaskAsynchronously(Tribes.getInstance());
     }
 
     private static List<AbilityType> getAbilitiesFromString(String s) {

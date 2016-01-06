@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerChatListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onEvent(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();

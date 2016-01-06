@@ -13,15 +13,14 @@ import java.util.logging.Level;
 public class Query implements Closeable {
 
     private String query;
-    private final Database db;
     private final QueryType q;
     private Connection con;
     private ResultSet result;
 
     public Query (QueryType q, String... s) {
         this.q = q;
-        this.db = Tribes.getDB();
-        this.con = this.db.getConnection();
+        Database db = Tribes.getDb();
+        this.con = db.getConnection();
         switch(q) {
             case SELECT:
                 this.query = q.val;
@@ -46,16 +45,6 @@ public class Query implements Closeable {
                 this.query = null;
                 break;
         }
-    }
-
-    public Query (QueryType q, String s, Database d) {
-        this.db = d;
-        this.query = s;
-        this.q = q;
-    }
-
-    public String getQuery() {
-        return this.query;
     }
 
     public ResultSet query() {
@@ -122,11 +111,13 @@ public class Query implements Closeable {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public Query limit(int i) {
         this.query += " LIMIT " + Integer.toString(i);
         return this;
     }
 
+    @SuppressWarnings("unused")
     public Query order(Order... o) {
         this.query += " ORDER BY ";
         for(Order oi : o) {

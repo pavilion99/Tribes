@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("unused")
 public class AbilityNightVision extends Ability {
 
     public AbilityNightVision(Player p, int i) {
@@ -39,11 +40,7 @@ public class AbilityNightVision extends Ability {
             this.multi = b.getMultiplier();
         }
 
-        for(PotionEffect pe : this.p.getActivePotionEffects()) {
-            if(pe.getType().equals(PotionEffectType.NIGHT_VISION) && pe.getAmplifier() != this.multi) {
-                this.p.removePotionEffect(PotionEffectType.NIGHT_VISION);
-            }
-        }
+        this.p.getActivePotionEffects().stream().filter(pe -> pe.getType().equals(PotionEffectType.NIGHT_VISION) && pe.getAmplifier() != this.multi).forEach(pe -> this.p.removePotionEffect(PotionEffectType.NIGHT_VISION));
 
         this.p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 60 * 60 * 20, multi));
     }

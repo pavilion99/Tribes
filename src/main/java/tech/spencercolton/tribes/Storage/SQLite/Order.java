@@ -1,5 +1,6 @@
 package tech.spencercolton.tribes.Storage.SQLite;
 
+@SuppressWarnings("unused")
 class Order {
 
     private final OrderType type;

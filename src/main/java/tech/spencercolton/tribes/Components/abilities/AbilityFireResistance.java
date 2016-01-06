@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("unused")
 public class AbilityFireResistance extends Ability {
 
     public AbilityFireResistance(Player p, int i) {
@@ -39,11 +40,7 @@ public class AbilityFireResistance extends Ability {
             this.multi = b.getMultiplier();
         }
 
-        for(PotionEffect pe : this.p.getActivePotionEffects()) {
-            if(pe.getType().equals(PotionEffectType.FIRE_RESISTANCE) && pe.getAmplifier() != this.multi) {
-                this.p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            }
-        }
+        this.p.getActivePotionEffects().stream().filter(pe -> pe.getType().equals(PotionEffectType.FIRE_RESISTANCE) && pe.getAmplifier() != this.multi).forEach(pe -> this.p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE));
 
         this.p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60 * 60 * 20, multi));
     }

@@ -4,6 +4,7 @@ import tech.spencercolton.tribes.Components.Tribe;
 import tech.spencercolton.tribes.Util.TribesEventCancellable;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("unused")
 public class TribeEarnCoinsEvent extends TribesEventCancellable {
 
     private final int amount;

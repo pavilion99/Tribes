@@ -1,6 +1,5 @@
 package tech.spencercolton.tribes.Commands;
 
-import tech.spencercolton.tribes.Tribes;
 import tech.spencercolton.tribes.Util.Config;
 import tech.spencercolton.tribes.Util.Message;
 import tech.spencercolton.tribes.Util.Command.TribeCommand;
@@ -11,13 +10,7 @@ public class TribesCmd extends TribeCommand {
 
     private final String[] acceptableFirstArgs = {"create", "invite", "kick", "destroy", "coins", "join", "info", "claim", "list", "reload", "upgrade", "sethome", "home", "getcoins", "leave", "ability", "removeability", "i", "unclaim", "map"};
 
-    public TribesCmd() {
-        super(Tribes.getInstance());
-    }
-
-    public boolean execute(CommandSender s, String[] args, Tribes tribes) {
-        this.tribes = tribes;
-
+    public boolean execute(CommandSender s, String[] args) {
         if(s instanceof ConsoleCommandSender) {
             Message.message(s, Config.consoleExecutionFailure);
             return false;
@@ -127,13 +120,13 @@ public class TribesCmd extends TribeCommand {
                 new TribesListCmd().execute(sender, args);
                 break;
             case "reload":
-                new TribesReloadCmd(tribes).execute(sender, args);
+                new TribesReloadCmd().execute(sender, args);
                 break;
             case "upgrade":
                 new TribesUpgradeCmd().execute(sender, args);
                 break;
             case "ability":
-                new TribesAbilityCmd(tribes).execute(sender, args);
+                new TribesAbilityCmd().execute(sender, args);
                 break;
             case "home":
                 new TribesHomeCmd().execute(sender, args);
