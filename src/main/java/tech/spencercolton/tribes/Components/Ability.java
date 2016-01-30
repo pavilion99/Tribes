@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@SuppressWarnings({"unused", "BooleanMethodIsAlwaysInverted"})
+@SuppressWarnings("unused")
 public abstract class Ability extends BukkitRunnable {
 
     protected final Player p;
@@ -21,6 +21,7 @@ public abstract class Ability extends BukkitRunnable {
 
     public abstract void run();
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean chunkOwned() {
         Tribe t = TribeLoader.getChunkOwner(Bukkit.getWorld(Config.world).getChunkAt(p.getLocation()));
 

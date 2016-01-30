@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 
 public class TribeEarnCoinsListener implements Listener {
 
-    @SuppressWarnings({"unused"})
+    @SuppressWarnings("unused")
     @EventHandler
     public void onEvent(TribeEarnCoinsEvent e) {
         e.getTribe().addCoins(e.getAmount());

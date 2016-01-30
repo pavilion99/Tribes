@@ -38,17 +38,27 @@ public class PlayerInteractListener implements Listener {
     public void rightClick(PlayerInteractEvent e) {
         Action a = e.getAction();
         if(a != Action.RIGHT_CLICK_BLOCK) {
+            if(!e.hasBlock())
+                return;
 
+            Chunk c = e.getPlayer().getLocation().getChunk();
+
+            Tribe t = TribeLoader.getChunkOwner(c);
+            if(!(t != null && t.equals(TribeLoader.getTribe(e.getPlayer())))) {
+                e.setUseInteractedBlock(Event.Result.DENY);
+                Message.message(e.getPlayer(), TribesCmd.err(), Config.errBuild);
+            }
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "EmptyMethod"})
     @EventHandler
     public void physical(PlayerInteractEvent e) {
-        Action a = e.getAction();
+        // TODO Figure out what I was going to do with this.
+        /* Action a = e.getAction();
         if(a != Action.PHYSICAL) {
 
-        }
+        } */
     }
 
 }
